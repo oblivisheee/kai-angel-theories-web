@@ -4,5 +4,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "rewrites": [{ "source": "/admin", "destination": "/admin/index.html" }]
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)content' ':(exclude)public/media'",
+  "functions": {
+    "api/content.ts": { "includeFiles": "content/**" },
+    "api/theory.ts": { "includeFiles": "content/**" }
+  },
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/t/:slug", "destination": "/api/theory?slug=:slug" },
+    { "source": "/media/:path*", "destination": "/api/media?path=:path*" }
+  ]
 }

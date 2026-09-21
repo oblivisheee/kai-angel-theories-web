@@ -1,11 +1,11 @@
 import { execSync } from 'node:child_process'
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import { ALBUM_ORDER, toTheories, type TheoryFile } from './src/lib/theory-data'
-import { renderTheoryPage, type SiteText } from './src/ssg/theory-page'
-import type { Album } from './src/types'
+import { buildContent } from './src/lib/content-model'
+import { readLocalContent } from './src/lib/content-fs'
+import { renderTheoryBySlug } from './src/ssg/theory-page'
 
 // Точка в начале — любой поддомен: адрес ngrok меняется при каждом запуске туннеля.
 const allowedHosts = ['.ngrok-free.app', '.ngrok.app', '.ngrok.io']
@@ -58,49 +58,16 @@ function siteMeta(): Plugin {
   }
 }
 
-const readJson = <T,>(path: string): T => JSON.parse(readFileSync(resolve(__dirname, path), 'utf8'))
-
 /**
- * Отдельная статическая страница на каждую теорию: /t/<имя файла>.
- * В dev отдаётся на лету (правки из админки видны сразу), при сборке пишется в dist/t/*.html.
+ * Страницы теорий /t/<slug>. В продакшене их рендерит функция Vercel (api/theory.ts) из свежего
+ * контента репозитория, поэтому в сборку они не пишутся. Здесь — то же самое для dev-сервера.
  */
 function theoryPages(): Plugin {
-  const load = () => {
-    const site = readJson<SiteText & { meta: { url?: string } }>('content/site.json')
-    const files: Record<string, TheoryFile> = {}
-    for (const name of readdirSync(resolve(__dirname, 'content/theories'))) {
-      if (name.endsWith('.json')) files[name] = readJson(`content/theories/${name}`)
-    }
-    const albums: Album[] = ALBUM_ORDER.map((id) => {
-      const a = readJson<{ title: string; year?: number | null; note?: string }>(`content/albums/${id}.json`)
-      return { id, title: a.title || id, year: a.year ? Number(a.year) || undefined : undefined, note: a.note ?? '' }
-    })
-    const loose = readJson<{ title: string }>('content/albums/loose.json')
-    const prod = process.env.VERCEL_PROJECT_PRODUCTION_URL
-    const siteUrl = (site.meta.url || (prod ? `https://${prod}` : '')).replace(/\/+$/, '')
-    return { site, theories: toTheories(files), albums, looseTitle: loose.title, siteUrl }
-  }
-
-  const render = (data: ReturnType<typeof load>, slug: string, styles: string) => {
-    const theory = data.theories.find((t) => t.slug === slug)
-    if (!theory) return null
-    const related = data.theories.filter((t) => t.album === theory.album && t !== theory).slice(0, 4)
-    return renderTheoryPage({
-      theory,
-      album: data.albums.find((a) => a.id === theory.album),
-      looseTitle: data.looseTitle,
-      related,
-      site: data.site,
-      siteUrl: data.siteUrl,
-      styles,
-    })
-  }
-
   return {
     name: 'theory-pages',
     configureServer(server) {
       // шаблон страниц импортирован конфигом, поэтому его правки требуют перезапуска dev-сервера
-      const templateFiles = ['src/ssg/theory-page.ts', 'src/lib/theory-data.ts', 'src/lib/markdown.ts', 'src/lib/credit.ts'].map((f) =>
+      const templateFiles = ['src/ssg/theory-page.ts', 'src/lib/theory-data.ts', 'src/lib/markdown.ts', 'src/lib/credit.ts', 'src/lib/content-model.ts'].map((f) =>
         resolve(__dirname, f),
       )
       server.watcher.on('change', (file) => {
@@ -109,21 +76,11 @@ function theoryPages(): Plugin {
       server.middlewares.use((req, res, next) => {
         const m = req.url?.match(/^\/t\/([^/?#]+)\/?(?:[?#].*)?$/)
         if (!m) return next()
-        const html = render(load(), decodeURIComponent(m[1]), '<link rel="stylesheet" href="/src/styles.css" />')
+        const html = renderTheoryBySlug(buildContent(readLocalContent(__dirname)), decodeURIComponent(m[1]), '<link rel="stylesheet" href="/src/styles.css" />')
         if (!html) return next()
         res.setHeader('Content-Type', 'text/html; charset=utf-8')
         res.end(html)
       })
-    },
-    generateBundle(_, bundle) {
-      const css = Object.values(bundle)
-        .filter((f) => f.type === 'asset' && f.fileName.endsWith('.css'))
-        .map((f) => `<link rel="stylesheet" href="/${f.fileName}" />`)
-        .join('\n    ')
-      const data = load()
-      for (const t of data.theories) {
-        this.emitFile({ type: 'asset', fileName: `t/${t.slug}.html`, source: render(data, t.slug, css)! })
-      }
     },
   }
 }
@@ -134,6 +91,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: { main: resolve(__dirname, 'index.html'), admin: resolve(__dirname, 'admin/index.html') },
+      output: {
+        // стили — по постоянному адресу /assets/main.css: на него ссылаются страницы теорий из функции Vercel
+        assetFileNames: (asset) => (asset.names?.[0]?.endsWith('.css') ? 'assets/[name][extname]' : 'assets/[name]-[hash][extname]'),
+      },
     },
   },
   server: { allowedHosts },

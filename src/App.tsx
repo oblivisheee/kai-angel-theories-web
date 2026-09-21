@@ -1,5 +1,5 @@
 import { FEATURED, THEORIES } from './content'
-import { useAmbientWorld } from './lib/world'
+import { useAmbientWorld, useRevealNames } from './lib/world'
 import { themeOf } from './data/albums'
 import { Header } from './components/Header'
 import { HotTheory } from './components/HotTheory'
@@ -11,6 +11,7 @@ import { Footer } from './components/Footer'
 export function App() {
   const runnersUp = THEORIES.filter((t) => t !== FEATURED).slice(0, 2)
   useAmbientWorld()
+  useRevealNames()
 
   return (
     <>

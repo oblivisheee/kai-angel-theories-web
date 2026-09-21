@@ -1,32 +1,39 @@
 import type { Album, Theory } from './types'
 import site from '../content/site.json'
-import looseJson from '../content/albums/loose.json'
-import { ALBUM_ORDER, toTheories, type TheoryFile } from './lib/theory-data'
+import { buildContent, type AlbumFile, type RawContent, type SiteJson } from './lib/content-model'
+import type { TheoryFile } from './lib/theory-data'
 
 /**
  * Весь контент сайта живёт в /content и редактируется через админку (/admin).
+ * В сборку он зашит как запасной вариант; в продакшене main.tsx до первого рендера
+ * подменяет его свежим из /api/content (читает репозиторий), поэтому правки видны без пересборки.
  * В коде зафиксированы только список альбомов, их порядок и порядок секций страницы.
  */
-export type Site = typeof site
-export const SITE: Site = site
+export type Site = SiteJson
 
-type AlbumFile = { title: string; year?: number | string | null; note?: string }
+const bundled: RawContent = {
+  site,
+  albums: import.meta.glob<AlbumFile>('../content/albums/*.json', { eager: true, import: 'default' }),
+  theories: import.meta.glob<TheoryFile>('../content/theories/*.json', { eager: true, import: 'default' }),
+}
 
-const albumFiles = import.meta.glob<AlbumFile>('../content/albums/*.json', { eager: true, import: 'default' })
-const albumFile = (id: string): AlbumFile => albumFiles[`../content/albums/${id}.json`] ?? { title: id }
-
-export const ALBUMS: Album[] = ALBUM_ORDER.map((id) => {
-  const a = albumFile(id)
-  return { id, title: a.title || id, year: a.year ? Number(a.year) || undefined : undefined, note: a.note ?? '' }
-})
-
+// live bindings: компоненты читают значения при рендере, поэтому setContent до рендера подменяет всё
+export let SITE: Site
+export let ALBUMS: Album[]
 /** Категория «вне альбомов»: название и описание тоже из админки. */
-export const LOOSE = { title: looseJson.title, note: looseJson.note }
-
-const theoryFiles = import.meta.glob<TheoryFile>('../content/theories/*.json', { eager: true, import: 'default' })
-
+export let LOOSE: { title: string; note: string }
 /** Опубликованные теории, отсортированные по накалу. */
-export const THEORIES: Theory[] = toTheories(theoryFiles)
-
+export let THEORIES: Theory[]
 /** Главная тема вверху страницы: выбирается в админке, иначе — самая горячая. */
-export const FEATURED: Theory | undefined = THEORIES.find((t) => t.id === SITE.hero.featured) ?? THEORIES[0]
+export let FEATURED: Theory | undefined
+
+export function setContent(raw: RawContent) {
+  const c = buildContent(raw)
+  SITE = c.site
+  ALBUMS = c.albums
+  LOOSE = c.loose
+  THEORIES = c.theories
+  FEATURED = c.featured
+}
+
+setContent(bundled)

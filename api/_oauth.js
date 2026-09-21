@@ -25,8 +25,18 @@ export function result({ token, error, errorCode }) {
   const content = error ? { provider: 'github', error, errorCode } : { provider: 'github', token }
   const message = `authorization:github:${state}:${JSON.stringify(content)}`
   return new Response(
-    `<!doctype html><html><body><script>
+    `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Вход в админку</title>
+    <style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#e6e3dc;font:16px/1.5 system-ui,sans-serif;text-align:center;padding:24px}p{max-width:28rem;margin:0}</style>
+    </head><body><p id="s">Передаём вход в админку…</p><script>
       (() => {
+        const status = document.getElementById('s');
+        const failed = ${serialize(!!error)};
+        if (!window.opener) {
+          // браузер или расширение оборвали связь с окном админки (window.opener) — токен передать некуда
+          status.textContent = 'Окно входа потеряло связь с админкой. Закройте его и попробуйте снова; если повторится — войдите через «Sign In Using Access Token» или в другом браузере.';
+          return;
+        }
         const patterns = ${serialize(domainPatterns())};
         const hasToken = ${serialize(!!token)};
         const trusted = (origin) => {
@@ -37,6 +47,8 @@ export function result({ token, error, errorCode }) {
           if (data !== 'authorizing:github') return;
           if (hasToken && patterns.length && !trusted(origin)) return;
           window.opener?.postMessage(${serialize(message)}, origin);
+          status.textContent = failed ? 'Не получилось войти — подробности в окне админки.' : 'Готово, окно можно закрыть.';
+          if (!failed) setTimeout(() => window.close(), 400);
         });
         window.opener?.postMessage('authorizing:github', '*');
       })();

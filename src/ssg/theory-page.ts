@@ -1,10 +1,12 @@
 import type { Album, Theory } from '../types'
-import { authorUrl, formatDate, theoryUrl } from '../lib/theory-data'
-import { renderMarkdown } from '../lib/markdown'
-import { CREDIT_HTML } from '../lib/credit'
+import { authorUrl, formatDate, theoryUrl } from '../lib/theory-data.js'
+import { renderMarkdown } from '../lib/markdown.js'
+import { CREDIT_HTML } from '../lib/credit.js'
+import type { Content } from '../lib/content-model.js'
 
 /**
- * Статическая страница теории. Собирается при сборке (см. vite.config.ts) и работает без JS:
+ * Страница теории — готовый HTML без JS. Рендерится функцией Vercel (api/theory.ts) с кэшем CDN,
+ * поэтому правки из админки видны без пересборки; в dev — middleware в vite.config.ts.
  * Telegram (превью и Instant View), режимы чтения браузеров и поисковики видят готовый текст.
  * Разметка — обычная статья: <article>, <h1>, <time>, meta author / article:published_time.
  */
@@ -170,4 +172,20 @@ ${renderMarkdown(t.body)}
   </body>
 </html>
 `
+}
+
+/** Страница по адресу /t/<slug> из готовой модели контента; null — такой теории нет. */
+export function renderTheoryBySlug(content: Content, slug: string, styles: string, fallbackUrl = ''): string | null {
+  const theory = content.theories.find((t) => t.slug === slug)
+  if (!theory) return null
+  const siteUrl = ((content.site.meta as { url?: string }).url || fallbackUrl).replace(/\/+$/, '')
+  return renderTheoryPage({
+    theory,
+    album: content.albums.find((a) => a.id === theory.album),
+    looseTitle: content.loose.title,
+    related: content.theories.filter((t) => t.album === theory.album && t !== theory).slice(0, 4),
+    site: content.site,
+    siteUrl,
+    styles,
+  })
 }

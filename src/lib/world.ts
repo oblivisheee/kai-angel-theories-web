@@ -30,6 +30,34 @@ export function useAmbientWorld() {
   }, [])
 }
 
+/**
+ * Анимации появления названий альбомов стартуют, когда название попадает в кадр:
+ * до этого они стоят на паузе (.js .album-name:not(.is-in)). Новые названия после
+ * переключения вкладок каталога подхватываются и анимируются заново.
+ */
+export function useRevealNames() {
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue
+          e.target.classList.add('is-in')
+          io.unobserve(e.target)
+        }
+      },
+      { threshold: 0.35 },
+    )
+    const scan = () => document.querySelectorAll('.album-name:not(.is-in)').forEach((el) => io.observe(el))
+    scan()
+    const mo = new MutationObserver(scan)
+    mo.observe(document.body, { childList: true, subtree: true })
+    return () => {
+      io.disconnect()
+      mo.disconnect()
+    }
+  }, [])
+}
+
 /** Пятно света следует за курсором (см. .world::before). */
 export function spotlight(e: PointerEvent<HTMLElement>) {
   const el = e.currentTarget

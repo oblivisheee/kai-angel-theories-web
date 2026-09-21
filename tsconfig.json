@@ -14,5 +14,5 @@
     "noEmit": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "admin", "vite.config.ts"]
+  "include": ["src", "admin", "api", "vite.config.ts"]
 }
