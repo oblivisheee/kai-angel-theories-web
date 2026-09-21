@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { buildContent } from '../src/lib/content-model.js'
 import { renderTheoryBySlug } from '../src/ssg/theory-page.js'
-import { CDN_CACHE, loadContent } from './_content.js'
+import { CDN_CACHE, loadContent, sourceHeaders } from './_content.js'
 
 /**
  * GET /t/<slug> (rewrite в vercel.json → /api/theory?slug=<slug>) — страница теории.
@@ -9,10 +9,10 @@ import { CDN_CACHE, loadContent } from './_content.js'
  */
 export async function GET(request: Request) {
   const slug = new URL(request.url).searchParams.get('slug') ?? ''
-  const { raw, source } = await loadContent()
+  const loaded = await loadContent()
   const prod = process.env.VERCEL_PROJECT_PRODUCTION_URL
   // стили сайта лежат по постоянному адресу (см. assetFileNames в vite.config.ts)
-  const html = renderTheoryBySlug(buildContent(raw), slug, '<link rel="stylesheet" href="/assets/main.css" />', prod ? `https://${prod}` : '')
+  const html = renderTheoryBySlug(buildContent(loaded.raw), slug, '<link rel="stylesheet" href="/assets/main.css" />', prod ? `https://${prod}` : '')
 
   if (!html) {
     return new Response(
@@ -20,5 +20,11 @@ export async function GET(request: Request) {
       { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=0, s-maxage=10' } },
     )
   }
-  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': CDN_CACHE, 'X-Content-Source': source } })
+  return new Response(html, {
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': loaded.source === 'github' ? CDN_CACHE : 'public, max-age=0, s-maxage=5',
+      ...sourceHeaders(loaded),
+    },
+  })
 }
