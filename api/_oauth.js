@@ -32,11 +32,22 @@ export function result({ token, error, errorCode }) {
       (() => {
         const status = document.getElementById('s');
         const failed = ${serialize(!!error)};
-        if (!window.opener) {
-          // браузер или расширение оборвали связь с окном админки (window.opener) — токен передать некуда
-          status.textContent = 'Окно входа потеряло связь с админкой. Закройте его и попробуйте снова; если повторится — войдите через «Sign In Using Access Token» или в другом браузере.';
-          return;
-        }
+        const token = ${serialize(token ?? null)};
+        const errorText = ${serialize(error ?? null)};
+        // Вход в той же вкладке (admin/cms.ts) или окно потеряло связь с админкой:
+        // возвращаемся в админку по адресу #/signin/<данные> — Sveltia сама примет токен.
+        const backToAdmin = () => {
+          if (token) {
+            sessionStorage.removeItem('cms-auth-error');
+            location.replace('/admin/index.html#/signin/' + btoa(JSON.stringify({ token })));
+          } else {
+            sessionStorage.setItem('cms-auth-error', errorText || 'неизвестная ошибка');
+            location.replace('/admin/index.html');
+          }
+        };
+        if (!window.opener) { backToAdmin(); return; }
+        // окно есть, но админка не ответила — тоже возвращаемся сами
+        const fallback = setTimeout(backToAdmin, 2500);
         const patterns = ${serialize(domainPatterns())};
         const hasToken = ${serialize(!!token)};
         const trusted = (origin) => {
@@ -46,6 +57,7 @@ export function result({ token, error, errorCode }) {
         window.addEventListener('message', ({ data, origin }) => {
           if (data !== 'authorizing:github') return;
           if (hasToken && patterns.length && !trusted(origin)) return;
+          clearTimeout(fallback);
           window.opener?.postMessage(${serialize(message)}, origin);
           status.textContent = failed ? 'Не получилось войти — подробности в окне админки.' : 'Готово, окно можно закрыть.';
           if (!failed) setTimeout(() => window.close(), 400);
