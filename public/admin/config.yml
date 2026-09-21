@@ -23,8 +23,25 @@ collections:
     create: true
     delete: true
     identifier_field: title
-    summary: "{{title}}"
-    sortable_fields: [heat, date, title]
+    summary: "{{title}} · накал {{heat}}/5"
+    sortable_fields:
+      fields: [heat, date, title]
+      default:
+        field: heat
+        direction: descending
+    view_filters:
+      filters:
+        - { name: shh-loud, label: "Shh!", field: album, pattern: "^shh-loud$" }
+        - { name: shh, label: "Shh...", field: album, pattern: "^shh$" }
+        - { name: damage, label: damage, field: album, pattern: "^damage$" }
+        - { name: loose, label: Вне альбомов, field: album, pattern: "^$" }
+        - { name: hot, label: "Горячие (4–5)", field: heat, pattern: "[45]" }
+        - { name: hidden, label: Скрытые с сайта, field: published, pattern: false }
+    view_groups:
+      groups:
+        - { name: heat, label: Накал, field: heat, pattern: "[1-5]" }
+        - { name: album, label: Альбом, field: album, pattern: ".*" }
+      default: heat
     fields:
       - { label: Заголовок, name: title, widget: string }
       - label: Альбом
@@ -46,13 +63,15 @@ collections:
       - { label: Дата публикации, name: date, widget: datetime, type: date }
       - label: Накал
         name: heat
-        widget: number
-        value_type: int
-        min: 0
-        max: 100
-        step: 5
-        default: 50
-        hint: "0–100. На сайте не показывается: чем выше, тем выше теория в каталоге и в блоке «Следом по накалу»."
+        widget: select
+        default: 3
+        hint: "Насколько тема обсуждается прямо сейчас. На сайте не показывается — определяет порядок в каталоге и блок «Следом по накалу». При равном накале выше более свежие."
+        options:
+          - { label: "5 · Пик — о ней говорят все", value: 5 }
+          - { label: "4 · Горячо — активно спорят", value: 4 }
+          - { label: "3 · Тепло — обычный интерес", value: 3 }
+          - { label: "2 · Спокойно — редко вспоминают", value: 2 }
+          - { label: "1 · Архив — тихая история", value: 1 }
       - { label: Опубликовано, name: published, widget: boolean, default: true, hint: "Выключите, чтобы скрыть теорию с сайта, не удаляя её" }
 
   # ——— Альбомы: список фиксирован, текст редактируется ———

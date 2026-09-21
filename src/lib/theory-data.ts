@@ -63,9 +63,20 @@ export function toTheories(files: Record<string, TheoryFile>): Theory[] {
       ref: t.ref || undefined,
       author: t.author ?? '',
       date: t.date ?? '',
-      heat: Math.min(100, Math.max(0, Number(t.heat) || 0)),
+      heat: heatLevel(t.heat),
     }))
     .sort(byHeat)
+}
+
+/**
+ * Уровень накала 1–5 (выбирается в админке: Архив · Спокойно · Тепло · Горячо · Пик).
+ * Старые значения по шкале 0–100 переводятся в уровни, пустое — «Тепло».
+ */
+export function heatLevel(v: unknown): number {
+  const n = Number(v)
+  if (!Number.isFinite(n) || n <= 0) return 3
+  if (n <= 5) return Math.round(n)
+  return n >= 90 ? 5 : n >= 70 ? 4 : n >= 50 ? 3 : n >= 30 ? 2 : 1
 }
 
 /** По накалу, при равном — более свежие выше. */
