@@ -3,6 +3,7 @@
  * здесь только то, что зависит от окружения: репозиторий и адрес входа через GitHub.
  */
 declare const __CMS_REPO__: string
+declare const __CMS_BRANCH__: string
 declare const CMS: { init: (opts: { config: Record<string, unknown> }) => void }
 
 CMS.init({
@@ -10,7 +11,7 @@ CMS.init({
     backend: {
       name: 'github',
       repo: __CMS_REPO__,
-      branch: 'main',
+      branch: __CMS_BRANCH__,
       // Вход через GitHub обслуживают функции этого же сайта на Vercel: api/auth.js и api/callback.js
       base_url: location.origin,
       auth_endpoint: 'api/auth',

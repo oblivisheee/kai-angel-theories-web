@@ -28,6 +28,20 @@ function cmsRepo(): string {
   return 'owner/kai-angel-theories-web'
 }
 
+/**
+ * Ветка, в которую админка сохраняет правки: та, из которой Vercel собирает сайт
+ * (production-деплой идёт из основной ветки), локально — текущая ветка git.
+ */
+function cmsBranch(): string {
+  if (process.env.CMS_BRANCH) return process.env.CMS_BRANCH
+  if (process.env.VERCEL_GIT_COMMIT_REF) return process.env.VERCEL_GIT_COMMIT_REF
+  try {
+    return execSync('git branch --show-current', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim() || 'main'
+  } catch {
+    return 'main'
+  }
+}
+
 /** Заголовок и описание страницы для поисковиков и превью ссылок — из content/site.json. */
 function siteMeta(): Plugin {
   const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
@@ -116,7 +130,7 @@ function theoryPages(): Plugin {
 
 export default defineConfig({
   plugins: [react(), siteMeta(), theoryPages()],
-  define: { __CMS_REPO__: JSON.stringify(cmsRepo()) },
+  define: { __CMS_REPO__: JSON.stringify(cmsRepo()), __CMS_BRANCH__: JSON.stringify(cmsBranch()) },
   build: {
     rollupOptions: {
       input: { main: resolve(__dirname, 'index.html'), admin: resolve(__dirname, 'admin/index.html') },
