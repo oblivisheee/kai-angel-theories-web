@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { FEATURED, THEORIES } from './content'
 import { useAmbientWorld, useRevealNames } from './lib/world'
 import { themeOf } from './data/albums'
@@ -24,6 +25,7 @@ export function App() {
         <Contacts />
       </main>
       <Footer theme={themeOf(FEATURED?.album ?? null)} />
+      <Analytics />
     </>
   )
 }
