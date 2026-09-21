@@ -54,6 +54,14 @@ function notice(text: string) {
   document.body.append(box)
 }
 
+// вход вернулся из /api/callback, но часть адреса после # потерялась (редиректы, мобильные браузеры) —
+// восстанавливаем её до старта Sveltia; одноразово
+const pendingSignin = sessionStorage.getItem('cms-signin')
+if (pendingSignin) {
+  sessionStorage.removeItem('cms-signin')
+  if (!location.hash.startsWith('#/signin/')) history.replaceState(null, '', `${location.pathname}#/signin/${pendingSignin}`)
+}
+
 const authError = sessionStorage.getItem(ERROR_KEY)
 if (authError) notice(`Не удалось войти: ${authError}`)
 

@@ -4,7 +4,33 @@
  * Файл с подчёркиванием Vercel не публикует как эндпоинт.
  */
 
+import { createHmac, timingSafeEqual } from 'node:crypto'
+
 const SCOPES = ['repo', 'public_repo', 'user', 'read:user', 'user:email']
+
+/**
+ * state для GitHub: «nonce.время.подпись». Подпись (HMAC секретом приложения) и срок 10 минут
+ * проверяются всегда, cookie — если она дошла. На телефоне вход часто уходит в приложение GitHub
+ * и возвращается уже в другой браузер, где cookie нет: без подписи такой вход падал с CSRF_DETECTED.
+ */
+const STATE_TTL = 10 * 60 * 1000
+const sign = (payload) => createHmac('sha256', process.env.GITHUB_CLIENT_SECRET ?? '').update(payload).digest('base64url').slice(0, 32)
+
+function makeState() {
+  const nonce = crypto.randomUUID().replaceAll('-', '')
+  const payload = `${nonce}.${Date.now().toString(36)}`
+  return { nonce, state: `${payload}.${sign(payload)}` }
+}
+
+function checkState(state, cookieNonce) {
+  const [nonce, ts, sig] = (state ?? '').split('.')
+  if (!nonce || !ts || !sig) return false
+  const expected = Buffer.from(sign(`${nonce}.${ts}`))
+  const given = Buffer.from(sig)
+  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return false
+  if (Date.now() - parseInt(ts, 36) > STATE_TTL) return false
+  return !cookieNonce || cookieNonce === nonce
+}
 
 const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -38,11 +64,13 @@ export function result({ token, error, errorCode }) {
         // возвращаемся в админку по адресу #/signin/<данные> — Sveltia сама примет токен.
         const backToAdmin = () => {
           if (token) {
+            const signin = btoa(JSON.stringify({ token }));
             sessionStorage.removeItem('cms-auth-error');
-            location.replace('/admin/index.html#/signin/' + btoa(JSON.stringify({ token })));
+            sessionStorage.setItem('cms-signin', signin); // если браузер потеряет часть адреса после #
+            location.replace('/admin#/signin/' + signin);
           } else {
             sessionStorage.setItem('cms-auth-error', errorText || 'неизвестная ошибка');
-            location.replace('/admin/index.html');
+            location.replace('/admin');
           }
         };
         if (!window.opener) { backToAdmin(); return; }
@@ -92,14 +120,14 @@ export function auth(request) {
 
   const asked = (requested ?? '').split(/[\s,]+/).filter(Boolean)
   const scope = asked.length && asked.every((s) => SCOPES.includes(s)) ? asked.join(',') : 'repo,user'
-  const csrf = crypto.randomUUID().replaceAll('-', '')
-  const params = new URLSearchParams({ client_id: GITHUB_CLIENT_ID, scope, state: csrf })
+  const { nonce, state } = makeState()
+  const params = new URLSearchParams({ client_id: GITHUB_CLIENT_ID, scope, state })
 
   return new Response(null, {
     status: 302,
     headers: {
       Location: `https://github.com/login/oauth/authorize?${params}`,
-      'Set-Cookie': `${COOKIE}=${csrf}; HttpOnly; Path=/; Max-Age=600; SameSite=Lax; Secure`,
+      'Set-Cookie': `${COOKIE}=${nonce}; HttpOnly; Path=/; Max-Age=600; SameSite=Lax; Secure`,
     },
   })
 }
@@ -108,10 +136,10 @@ export async function callback(request) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const state = searchParams.get('state')
-  const csrf = request.headers.get('cookie')?.match(new RegExp(`\\b${COOKIE}=([0-9a-f]{32})\\b`))?.[1]
+  const cookieNonce = request.headers.get('cookie')?.match(new RegExp(`\\b${COOKIE}=([0-9a-f]{32})\\b`))?.[1]
 
   if (!code || !state) return result({ error: 'GitHub не вернул код авторизации. Попробуйте ещё раз.', errorCode: 'AUTH_CODE_REQUEST_FAILED' })
-  if (!csrf || csrf !== state) return result({ error: 'Проверка безопасности не прошла. Попробуйте войти ещё раз.', errorCode: 'CSRF_DETECTED' })
+  if (!checkState(state, cookieNonce)) return result({ error: 'Ссылка входа устарела или неверна. Попробуйте войти ещё раз.', errorCode: 'CSRF_DETECTED' })
 
   try {
     const res = await fetch('https://github.com/login/oauth/access_token', {

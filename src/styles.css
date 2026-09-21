@@ -203,7 +203,7 @@ body::after {
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: #2a2a31; border: 3px solid var(--void); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #45454d; }
+@media (hover: hover) { ::-webkit-scrollbar-thumb:hover { background: #45454d; } }
 
 a { color: inherit; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 button { font: inherit; color: inherit; cursor: pointer; }
@@ -276,9 +276,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transition: transform 0.7s var(--ease), filter 0.7s var(--ease);
 }
 /* наведение на мир damage расшатывает осколок сильнее */
-.world:hover .album-name--damage::after,
+@media (hover: hover) { .world:hover .album-name--damage::after,
 .group__head:hover .album-name--damage::after,
-.theory__hero:hover .album-name--damage::after { transform: translate(0.11em, 0.08em) rotate(-2.2deg); filter: brightness(1.35); }
+.theory__hero:hover .album-name--damage::after { transform: translate(0.11em, 0.08em) rotate(-2.2deg); filter: brightness(1.35); } }
 
 /* ——— Shh... и Shh!: фишки названия тем же приёмом, что у damage ———
    Само название прозрачно и держит место; видимые буквы — слой ::before (хром альбома + блик),
@@ -322,13 +322,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transform: translateX(0.07em);
   transition: transform 1.2s var(--ease), opacity 1.2s var(--ease), filter 1.2s var(--ease);
 }
-.world:hover .album-name--shh::after,
+@media (hover: hover) { .world:hover .album-name--shh::after,
 .group__head:hover .album-name--shh::after,
 .theory__hero:hover .album-name--shh::after {
   transform: translateX(0.22em);
   opacity: 0;
   filter: blur(0.14em) drop-shadow(0 0 0.5em rgb(91 140 255 / 0));
-}
+} }
 
 /* Shh! — крик: вокруг букв контур-отзвук. При наведении от названия расходится ударная волна,
    а новый отзвук оседает обратно. Размер волны — от середины самих букв (width: fit-content у крупных названий). */
@@ -340,9 +340,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transform-origin: 50% 58%;
   opacity: 0.5;
 }
-.world:hover .album-name--shh-loud::after,
+@media (hover: hover) { .world:hover .album-name--shh-loud::after,
 .group__head:hover .album-name--shh-loud::after,
-.theory__hero:hover .album-name--shh-loud::after { animation: shockwave 1s cubic-bezier(0.2, 0.6, 0.3, 1); }
+.theory__hero:hover .album-name--shh-loud::after { animation: shockwave 1s cubic-bezier(0.2, 0.6, 0.3, 1); } }
 @keyframes shockwave {
   0% { transform: scale(1.02); opacity: 1; -webkit-text-stroke-color: rgb(255 150 160 / 0.95); }
   70% { transform: scale(1.45); opacity: 0; }
@@ -365,7 +365,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: radial-gradient(28rem circle at var(--mx, 80%) var(--my, 0%), color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
   opacity: 0; transition: opacity 0.5s;
 }
-.world:hover::before { opacity: 1; }
+@media (hover: hover) { .world:hover::before { opacity: 1; } }
 
 /* ——— Шапка ——— */
 .header {
@@ -378,9 +378,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .wordmark { text-decoration: none; font-size: 1.75rem; line-height: 1; }
 .nav { display: flex; align-items: center; gap: 1.75rem; font-size: 0.875rem; }
 .nav a { text-decoration: none; color: var(--smoke); transition: color 0.2s; }
-.nav a:hover { color: var(--bone); }
+@media (hover: hover) { .nav a:hover { color: var(--bone); } }
 .nav .nav__cta { color: var(--bone); border: 1px solid var(--line); padding: 0.45rem 1rem; border-radius: 999px; transition: border-color 0.2s, background 0.2s; }
-.nav .nav__cta:hover { border-color: var(--wound-hot); background: rgb(200 32 43 / 0.12); }
+@media (hover: hover) { .nav .nav__cta:hover { border-color: var(--wound-hot); background: rgb(200 32 43 / 0.12); } }
 
 /* ——— Кнопки ——— */
 .btn {
@@ -391,10 +391,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   font-size: 0.9375rem; font-weight: 400;
   transition: background 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.35s, transform 0.2s;
 }
-.btn:hover { border-color: color-mix(in srgb, var(--accent) 70%, var(--bone)); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+@media (hover: hover) { .btn:hover { border-color: color-mix(in srgb, var(--accent) 70%, var(--bone)); background: color-mix(in srgb, var(--accent) 12%, transparent); } }
 .btn:active { transform: scale(0.97); }
 .btn--solid { background: var(--bone); color: #000; border-color: var(--bone); font-weight: 500; }
-.btn--solid:hover { background: #fff; border-color: #fff; box-shadow: 0 8px 28px -10px color-mix(in srgb, var(--accent) 80%, transparent); }
+@media (hover: hover) { .btn--solid:hover { background: #fff; border-color: #fff; box-shadow: 0 8px 28px -10px color-mix(in srgb, var(--accent) 80%, transparent); } }
 
 /* ——— Горячая тема ——— */
 .hot { padding: 2.5rem 0 4.5rem; }
@@ -417,7 +417,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .hot__meta { margin: 0 0 0.9rem; color: var(--accent); font-size: 0.875rem; font-weight: 400; letter-spacing: 0.01em; }
 .hot__title { font: var(--title-style) var(--title-weight) calc(clamp(2rem, 5vw, 3.5rem) * var(--title-scale))/1.1 var(--title-font); margin: 0 0 1.25rem; letter-spacing: -0.015em; text-wrap: balance; }
 .hot__title a { text-decoration: none; transition: text-shadow 0.4s; }
-.hot__title a:hover { text-shadow: var(--hover-shadow); }
+@media (hover: hover) { .hot__title a:hover { text-shadow: var(--hover-shadow); } }
 .hot__excerpt { color: #c4c1c9; font-size: 1.0625rem; max-width: 36rem; margin: 0 0 2rem; text-wrap: pretty; }
 .hot__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; }
 
@@ -431,11 +431,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
   border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--line-soft));
   transition: border-color var(--t) var(--ease);
 }
-.next:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+@media (hover: hover) { .next:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); } }
 .next__album { font-size: 1.875rem; line-height: 1.05; justify-self: start; }
 .next__album--plain { font: italic 500 1.375rem/1.2 var(--f-serif); color: var(--smoke); }
 .next__title { font: var(--title-style) var(--title-weight) calc(1.25rem * var(--title-scale))/1.3 var(--title-font); text-wrap: balance; transition: text-shadow 0.3s; }
-.next:hover .next__title { text-shadow: var(--hover-shadow); }
+@media (hover: hover) { .next:hover .next__title { text-shadow: var(--hover-shadow); } }
 .next__by { color: var(--dim); font-size: 0.8125rem; }
 
 /* ——— Архив ——— */
@@ -443,7 +443,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .archive__head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 1rem; }
 .sort { display: flex; gap: 1.25rem; font-size: 0.875rem; }
 .sort button { background: none; border: 0; padding: 0.25rem 0; color: var(--dim); border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
-.sort button:hover { color: var(--smoke); }
+@media (hover: hover) { .sort button:hover { color: var(--smoke); } }
 .sort button[aria-pressed='true'] { color: var(--bone); border-bottom-color: var(--wound-hot); }
 
 .tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 1rem; }
@@ -453,7 +453,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: transparent; color: var(--smoke); font-size: 0.9375rem;
   transition: color 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.3s;
 }
-.tab:hover { color: var(--bone); border-color: color-mix(in srgb, var(--accent) 65%, var(--line)); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+@media (hover: hover) { .tab:hover { color: var(--bone); border-color: color-mix(in srgb, var(--accent) 65%, var(--line)); background: color-mix(in srgb, var(--accent) 8%, transparent); } }
 .tab[aria-pressed='true'] { background: var(--tab-on); border-color: var(--tab-on); color: var(--tab-ink); box-shadow: 0 6px 22px -10px var(--accent); }
 .tab > span { line-height: 1; text-box: trim-both cap alphabetic; }
 /* разные шрифты альбомов приводим к одной высоте прописных */
@@ -503,7 +503,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   opacity: 0; transform: scaleX(0.6); transform-origin: left;
   transition: opacity var(--t-fast), transform var(--t) var(--ease);
 }
-.row__btn:hover::before, .row__btn:focus-visible::before { opacity: 1; transform: none; transition: opacity var(--t), transform 0.45s var(--ease); }
+.row__btn:focus-visible::before { opacity: 1; transform: none; transition: opacity var(--t), transform 0.45s var(--ease); }
+@media (hover: hover) { .row__btn:hover::before { opacity: 1; transform: none; transition: opacity var(--t), transform 0.45s var(--ease); } }
 .row__link { text-decoration: none; }
 /* растянутая ссылка: кликабельна вся строка */
 .row__link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
@@ -512,9 +513,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .row__btn:focus-within::before { opacity: 1; transform: none; }
 .row__by .author { position: relative; z-index: 2; }
 .author { color: var(--smoke); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); text-underline-offset: 3px; transition: color 0.2s, text-decoration-color 0.2s; }
-.author:hover { color: var(--bone); text-decoration-color: var(--accent); }
+@media (hover: hover) { .author:hover { color: var(--bone); text-decoration-color: var(--accent); } }
 .row__ref { color: var(--dim); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.3s; }
-.row__btn:hover .row__ref { color: var(--accent); }
+@media (hover: hover) { .row__btn:hover .row__ref { color: var(--accent); } }
 .row__main { display: grid; gap: 0.4rem; max-width: 42rem; }
 .row__title {
   font: var(--title-style) var(--title-weight) calc(1.5rem * var(--title-scale))/1.3 var(--title-font);
@@ -523,9 +524,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 /* Shh! сдвигает заголовок: transform на нём, а не на ссылке — иначе растянутая ссылка ужмётся до заголовка */
 .t-shh-loud .row__title { display: inline-block; transition: color var(--t-fast), text-shadow var(--t-fast), letter-spacing var(--t) var(--ease), transform var(--t) var(--ease); }
-.t-shh-loud .row__btn:hover .row__title { transition: color var(--t), text-shadow var(--t), letter-spacing var(--t-slow) var(--ease), transform 0.4s var(--ease); }
-.t-shh-loud .row__btn:hover .row__title { transform: translateX(var(--hover-shift)); }
-.row__btn:hover .row__title { color: #fff; text-shadow: var(--hover-shadow); letter-spacing: var(--hover-track); animation: var(--hover-anim); transition: color var(--t), text-shadow var(--t), letter-spacing var(--t-slow) var(--ease), background-size var(--t-slow) var(--ease); }
+@media (hover: hover) { .t-shh-loud .row__btn:hover .row__title { transition: color var(--t), text-shadow var(--t), letter-spacing var(--t-slow) var(--ease), transform 0.4s var(--ease); } }
+@media (hover: hover) { .t-shh-loud .row__btn:hover .row__title { transform: translateX(var(--hover-shift)); } }
+@media (hover: hover) { .row__btn:hover .row__title { color: #fff; text-shadow: var(--hover-shadow); letter-spacing: var(--hover-track); animation: var(--hover-anim); transition: color var(--t), text-shadow var(--t), letter-spacing var(--t-slow) var(--ease), background-size var(--t-slow) var(--ease); } }
 
 /* ——— Наведение на теорию: у каждого альбома свой жест ——— */
 
@@ -537,7 +538,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   mask-image: linear-gradient(90deg, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
   opacity: 0;
 }
-.row__btn:hover::after { animation: sweep 0.9s var(--ease-in-out); }
+@media (hover: hover) { .row__btn:hover::after { animation: sweep 0.9s var(--ease-in-out); } }
 @keyframes sweep {
   0% { opacity: 1; background-position: 130% 0; }
   80% { opacity: 1; }
@@ -552,8 +553,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 
 /* Shh! — плашка влетает рывком и вспыхивает, заголовок коротко бьёт белым */
-.t-shh-loud .row__btn:hover::before { transition: opacity 0.12s, transform 0.28s var(--ease); }
-.t-shh-loud .row__btn:hover::before { animation: flash 0.5s ease-out; }
+@media (hover: hover) { .t-shh-loud .row__btn:hover::before { transition: opacity 0.12s, transform 0.28s var(--ease); } }
+@media (hover: hover) { .t-shh-loud .row__btn:hover::before { animation: flash 0.5s ease-out; } }
 @keyframes flash { from { filter: brightness(2.4) saturate(1.3); } }
 @keyframes shout {
   0% { text-shadow: 0 0 0.6em rgb(255 70 90 / 0.95); }
@@ -572,7 +573,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: linear-gradient(var(--wound-hot), var(--wound-hot)) 0 100% / 0 1px no-repeat;
   padding-bottom: 0.08em;
 }
-.t-loose .row__btn:hover .row__title { background-size: 100% 1px; }
+@media (hover: hover) { .t-loose .row__btn:hover .row__title { background-size: 100% 1px; } }
 .row__excerpt { color: var(--smoke); font-size: 0.9375rem; text-wrap: pretty; }
 .row__by { color: var(--dim); font-size: 0.8125rem; }
 .empty { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 2rem 0 0.5rem; color: var(--smoke); }
@@ -596,17 +597,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .contacts__list { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line-soft); border: 1px solid var(--line-soft); }
 .contact { position: relative; display: grid; gap: 0.35rem; align-content: start; padding: 1.75rem 1.5rem; background: var(--void); text-decoration: none; height: 100%; transition: background 0.3s; }
 .contact::before { content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--wound-hot); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease); }
-.contact:hover { background: linear-gradient(180deg, rgb(140 15 23 / 0.12), var(--ash)); }
-.contact:hover::before { transform: none; }
+@media (hover: hover) { .contact:hover { background: linear-gradient(180deg, rgb(140 15 23 / 0.12), var(--ash)); } }
+@media (hover: hover) { .contact:hover::before { transform: none; } }
 .contact__handle { font: italic 500 1.75rem/1.2 var(--f-serif); transition: color 0.3s; }
-.contact:hover .contact__handle { color: #fff; }
+@media (hover: hover) { .contact:hover .contact__handle { color: #fff; } }
 .contact__role { color: var(--smoke); font-size: 0.9375rem; }
 
 /* ——— Подвал ——— */
 .footer { border-top: 1px solid var(--line-soft); padding: 2rem 0; font-size: 0.8125rem; color: var(--dim); }
 .footer__row { display: flex; justify-content: space-between; align-items: center; gap: 1rem 2rem; flex-wrap: wrap; }
 .footer a { color: var(--smoke); }
-.footer a:hover { color: var(--bone); }
+@media (hover: hover) { .footer a:hover { color: var(--bone); } }
 .footer__end { display: inline-flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
 
 /* ——— Подпись Weliable ———
@@ -627,13 +628,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .credit__ring, .credit__edge { stroke-dasharray: 1; stroke-dashoffset: 0; }
 .credit__nodes { transition: fill 0.4s; }
 .credit__name { font-size: 0.875rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1; color: var(--bone); transition: color 0.3s; }
-.footer .credit:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
-.credit:hover .credit__name { color: #fff; }
-.credit:hover .credit__mark { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 75%, transparent)); }
-.credit:hover .credit__nodes { fill: var(--accent); }
+@media (hover: hover) { .footer .credit:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); } }
+@media (hover: hover) { .credit:hover .credit__name { color: #fff; } }
+@media (hover: hover) { .credit:hover .credit__mark { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 75%, transparent)); } }
+@media (hover: hover) { .credit:hover .credit__nodes { fill: var(--accent); } }
 /* кольцо и рёбра прорисовываются заново — как схема, которая собирается */
-.credit:hover .credit__ring { animation: wl-draw 0.8s var(--ease); }
-.credit:hover .credit__edge { animation: wl-draw 0.6s 0.12s var(--ease) backwards; }
+@media (hover: hover) { .credit:hover .credit__ring { animation: wl-draw 0.8s var(--ease); } }
+@media (hover: hover) { .credit:hover .credit__edge { animation: wl-draw 0.6s 0.12s var(--ease) backwards; } }
 @keyframes wl-draw { from { stroke-dashoffset: 1; } }
 
 /* ——— Страница теории ——— */
@@ -653,12 +654,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .theory__ghost.album-name--damage { margin-bottom: 0.5em; }
 .theory__meta { margin: 0 0 1rem; color: var(--accent); font-size: 0.875rem; }
 .theory__meta a { text-decoration: none; }
-.theory__meta a:hover { text-decoration: underline; }
+@media (hover: hover) { .theory__meta a:hover { text-decoration: underline; } }
 .theory__title { font: var(--title-style) var(--title-weight) calc(clamp(2.125rem, 5.5vw, 3.5rem) * var(--title-scale))/1.1 var(--title-font); letter-spacing: -0.015em; margin: 0 0 1.25rem; text-wrap: balance; }
 .theory__lead { font-size: 1.125rem; color: #c4c1c9; margin: 0 0 1.5rem; text-wrap: pretty; }
 .theory__byline { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin: 0; color: var(--dim); font-size: 0.875rem; }
 .theory__byline span, .theory__byline .author { color: var(--smoke); }
-.theory__byline .author:hover { color: var(--bone); }
+@media (hover: hover) { .theory__byline .author:hover { color: var(--bone); } }
 .theory__body { font: 400 clamp(1.1875rem, 2.4vw, 1.3125rem)/1.7 var(--f-serif); color: #d8d5dc; padding: 2.5rem 0 1rem; border-top: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line-soft)); text-wrap: pretty; }
 .theory__foot { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 2.5rem 0 4rem; }
 .theory__more { padding: 3rem 0 4rem; border-top: 1px solid var(--line-soft); }
@@ -671,7 +672,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .prose h2, .prose h3, .prose h4 { font: var(--title-style) var(--title-weight) calc(1.5rem * var(--title-scale))/1.25 var(--title-font); color: var(--bone); margin: 1.6em 0 0.6em; }
 .prose h3, .prose h4 { font-size: calc(1.25rem * var(--title-scale)); }
 .prose a { color: color-mix(in srgb, var(--accent) 55%, var(--bone)); text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent); }
-.prose a:hover { color: #fff; }
+@media (hover: hover) { .prose a:hover { color: #fff; } }
 .prose strong { color: var(--bone); font-weight: 600; }
 .prose blockquote { margin-left: 0; padding-left: 1.25rem; border-left: 1px solid var(--accent); font-style: italic; color: var(--bone); }
 .prose ul, .prose ol { padding-left: 1.25rem; }
@@ -682,6 +683,20 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .prose pre { overflow-x: auto; padding: 1rem; background: rgb(255 255 255 / 0.04); font-size: 0.9rem; }
 .prose pre code { padding: 0; background: none; }
 .prose hr { border: 0; border-top: 1px solid var(--line-soft); margin: 2em 0; }
+
+/* ——— Тач-экраны ———
+   Эффекты наведения выше живут в @media (hover: hover): на телефоне :hover залипает после касания
+   (эффект остаётся висеть, в том числе при возврате «назад»). Здесь — короткий отклик на нажатие. */
+@media (hover: none) {
+  .row__btn:active::before { opacity: 1; transform: none; transition: opacity 0.1s; }
+  .row__btn:active .row__title { color: #fff; }
+  .next:active { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+  .btn:active { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .btn--solid:active { background: #fff; }
+  .contact:active { background: var(--ash); }
+  /* зерно без смешивания слоёв: overlay на весь экран заставляет мобильный браузер перерисовывать его при прокрутке */
+  body::after { mix-blend-mode: normal; opacity: 0.035; }
+}
 
 /* ——— Адаптив ——— */
 @media (max-width: 760px) {
