@@ -1,0 +1,20 @@
+# Шаблон Instant View для страниц теорий.
+# Вставить в редактор на https://instantview.telegram.org (Templates → свой домен),
+# проверить на 5–10 страницах /t/... и отправить на проверку.
+
+~version: "2.1"
+
+# Только страницы теорий
+?path: /t/.+
+
+title:          //article//h1[has-class("theory__title")]
+subtitle:       //article//p[has-class("theory__lead")]
+kicker:         //article//p[has-class("theory__meta")]
+author:         //meta[@name="author"]/@content
+published_date: //meta[@property="article:published_time"]/@content
+channel:        //meta[@property="telegram:channel"]/@content
+image_url:      $og_image
+
+# Текст разбора; кнопки, «ещё из раздела», шапка и подвал в IV не нужны
+body:           //article//div[has-class("theory__body")]
+@remove:        //footer[has-class("theory__foot")]

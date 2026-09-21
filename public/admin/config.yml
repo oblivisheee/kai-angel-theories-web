@@ -1,0 +1,196 @@
+# Админка архива (Sveltia CMS). Репозиторий и вход задаются в admin/cms.ts.
+# Зафиксировано в коде: список альбомов, их порядок и порядок секций страницы.
+# Всё остальное редактируется здесь.
+
+media_folder: /public/media
+public_folder: /media
+
+# Имена файлов новых теорий — латиницей: кириллица в заголовке транслитерируется.
+# Из имени файла получается адрес страницы теории: /t/<имя>.
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  # ——— Теории: можно добавлять, править, скрывать и удалять ———
+  - name: theories
+    label: Теории
+    label_singular: теорию
+    icon: lightbulb
+    folder: /content/theories
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [heat, date, title]
+    fields:
+      - { label: Заголовок, name: title, widget: string }
+      - label: Альбом
+        name: album
+        widget: select
+        required: false
+        hint: Оставьте пустым, если теория не привязана к альбому — она попадёт в «Вне альбомов».
+        options:
+          - { label: "Shh!", value: shh-loud }
+          - { label: "Shh...", value: shh }
+          - { label: damage, value: damage }
+      - { label: Трек или тема, name: ref, widget: string, required: false, hint: "Например: трек 05, интро, визуал" }
+      - { label: Кратко, name: excerpt, widget: text, hint: "1–2 предложения для списка и главной" }
+      - label: Полный разбор
+        name: body
+        widget: richtext
+        hint: Можно заголовки, ссылки, цитаты, списки и картинки.
+      - { label: Автор, name: author, widget: string, default: "@anon", hint: "Юзернейм в Telegram, например @noir_archives, — на сайте станет ссылкой на профиль" }
+      - { label: Дата публикации, name: date, widget: datetime, type: date }
+      - label: Накал
+        name: heat
+        widget: number
+        value_type: int
+        min: 0
+        max: 100
+        step: 5
+        default: 50
+        hint: "0–100. На сайте не показывается: чем выше, тем выше теория в каталоге и в блоке «Следом по накалу»."
+      - { label: Опубликовано, name: published, widget: boolean, default: true, hint: "Выключите, чтобы скрыть теорию с сайта, не удаляя её" }
+
+  # ——— Альбомы: список фиксирован, текст редактируется ———
+  - name: albums
+    label: Альбомы
+    icon: album
+    files:
+      - name: shh-loud
+        label: "Shh!"
+        file: /content/albums/shh-loud.json
+        fields: &album_fields
+          - { label: Название, name: title, widget: string }
+          - { label: Год, name: year, widget: number, value_type: int, required: false, hint: "Пусто — год не показывается" }
+          - { label: Описание, name: note, widget: text }
+      - name: shh
+        label: "Shh..."
+        file: /content/albums/shh.json
+        fields: *album_fields
+      - name: damage
+        label: damage
+        file: /content/albums/damage.json
+        fields: *album_fields
+      - name: loose
+        label: Вне альбомов
+        file: /content/albums/loose.json
+        fields:
+          - { label: Название раздела, name: title, widget: string }
+          - { label: Описание, name: note, widget: text }
+
+  # ——— Тексты и ссылки сайта ———
+  - name: site
+    label: Настройки сайта
+    icon: settings
+    files:
+      - name: site
+        label: Тексты и ссылки
+        file: /content/site.json
+        fields:
+          - label: Поиск и превью ссылок
+            name: meta
+            widget: object
+            fields:
+              - { label: Заголовок вкладки, name: title, widget: string }
+              - { label: Описание, name: description, widget: text }
+              - label: Адрес сайта
+                name: url
+                widget: string
+                required: false
+                hint: "Например https://kaiangel.vercel.app — для ссылок в Telegram и поисковиках. Пусто — возьмётся адрес с Vercel."
+
+          - label: Ссылки
+            name: links
+            widget: object
+            fields:
+              - { label: Telegram-канал, name: channel, widget: string }
+              - { label: Бот предложки, name: bot, widget: string }
+          - label: Шапка
+            name: header
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Логотип, name: wordmark, widget: string }
+              - { label: Пункт «Архив», name: navArchive, widget: string }
+              - { label: Пункт «Связь», name: navContacts, widget: string }
+              - { label: Пункт «Канал», name: navChannel, widget: string }
+              - { label: Кнопка, name: cta, widget: string }
+          - label: Главная тема
+            name: hero
+            widget: object
+            fields:
+              - label: Теория вверху страницы
+                name: featured
+                widget: relation
+                collection: theories
+                value_field: "{{slug}}"
+                search_fields: [title]
+                display_fields: [title]
+                required: false
+                hint: Пусто — покажется теория с самым высоким накалом.
+              - { label: Кнопка, name: read, widget: string }
+              - { label: Заголовок следующих тем, name: next, widget: string }
+          - label: Каталог
+            name: archive
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - { label: Сортировка по накалу, name: sortHeat, widget: string }
+              - { label: Сортировка по новизне, name: sortNew, widget: string }
+              - { label: Вкладка «все», name: all, widget: string }
+              - { label: "Счётчик: 1", name: countOne, widget: string, hint: "1 разбор" }
+              - { label: "Счётчик: 2–4", name: countFew, widget: string, hint: "3 разбора" }
+              - { label: "Счётчик: 5+", name: countMany, widget: string, hint: "7 разборов" }
+              - { label: Пустой раздел, name: empty, widget: string }
+              - { label: Кнопка в пустом разделе, name: emptyCta, widget: string }
+          - label: Страница теории
+            name: theory
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Ссылка в архив, name: back, widget: string }
+              - { label: Заголовок «ещё теории», name: more, widget: string }
+          - label: Предложка
+            name: submit
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - { label: Текст, name: lead, widget: text }
+              - { label: Кнопка, name: button, widget: string }
+              - { label: Подпись под кнопкой, name: note, widget: string, required: false }
+              - { label: Заголовок инструкции, name: formatTitle, widget: string }
+              - label: Шаги инструкции
+                name: format
+                widget: list
+                summary: "{{fields.label}} — {{fields.text}}"
+                fields:
+                  - { label: Пункт, name: label, widget: string }
+                  - { label: Пояснение, name: text, widget: string }
+          - label: Контакты
+            name: contacts
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Заголовок, name: title, widget: string }
+              - label: Карточки
+                name: items
+                widget: list
+                summary: "{{fields.handle}}"
+                fields:
+                  - { label: Тип, name: kind, widget: string, hint: "Канал, Куратор…" }
+                  - { label: Имя, name: handle, widget: string }
+                  - { label: Ссылка, name: url, widget: string }
+                  - { label: Описание, name: role, widget: text }
+          - label: Подвал
+            name: footer
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Текст, name: text, widget: string }
+              - { label: Ссылка наверх, name: top, widget: string }
