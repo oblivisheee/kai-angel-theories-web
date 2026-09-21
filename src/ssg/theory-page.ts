@@ -1,6 +1,7 @@
 import type { Album, Theory } from '../types'
 import { authorUrl, formatDate, theoryUrl } from '../lib/theory-data'
 import { renderMarkdown } from '../lib/markdown'
+import { CREDIT_HTML } from '../lib/credit'
 
 /**
  * Статическая страница теории. Собирается при сборке (см. vite.config.ts) и работает без JS:
@@ -157,10 +158,13 @@ ${renderMarkdown(t.body)}
       }
     </main>
 
-    <footer class="footer">
+    <footer class="footer t-${theme}">
       <div class="wrap footer__row">
         <span>${esc(site.footer.text)}</span>
-        <a href="#top">${esc(site.footer.top)}</a>
+        <span class="footer__end">
+          ${CREDIT_HTML}
+          <a href="#top">${esc(site.footer.top)}</a>
+        </span>
       </div>
     </footer>
   </body>

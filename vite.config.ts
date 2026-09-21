@@ -85,6 +85,13 @@ function theoryPages(): Plugin {
   return {
     name: 'theory-pages',
     configureServer(server) {
+      // шаблон страниц импортирован конфигом, поэтому его правки требуют перезапуска dev-сервера
+      const templateFiles = ['src/ssg/theory-page.ts', 'src/lib/theory-data.ts', 'src/lib/markdown.ts', 'src/lib/credit.ts'].map((f) =>
+        resolve(__dirname, f),
+      )
+      server.watcher.on('change', (file) => {
+        if (templateFiles.includes(file)) server.restart()
+      })
       server.middlewares.use((req, res, next) => {
         const m = req.url?.match(/^\/t\/([^/?#]+)\/?(?:[?#].*)?$/)
         if (!m) return next()

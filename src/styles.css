@@ -47,6 +47,7 @@
   --hover-shadow: none;
   --hover-shift: 0;
   --hover-track: 0;
+  --mk-hi: #fdfdff; --mk-mid: #6b6b75; --mk-lo: #f1f1f5;
 }
 
 /* Shh... — шёпот: синий бархат ночного Голливуда, ар-деко, лунное серебро. */
@@ -76,6 +77,7 @@
   --rule-h: 4px;
   --wash: linear-gradient(90deg, rgb(91 140 255 / 0.1), transparent 70%);
   --hover-shadow: 0 0 22px rgb(120 160 255 / 0.65);
+  --mk-hi: #f1f5ff; --mk-mid: #5a73b3; --mk-lo: #dfe8ff;
 }
 
 /* Shh! — тот же жест, но криком: плотный узкий гротеск, красный. */
@@ -104,6 +106,7 @@
   --wash: linear-gradient(90deg, rgb(227 40 58 / 0.24), rgb(227 40 58 / 0.05) 55%, transparent);
   --hover-shift: 0.4rem;
   --hover-track: 0.02em;
+  --mk-hi: #ffe9e9; --mk-mid: #b3182c; --mk-lo: #ffc9cd;
 }
 
 /* damage — зеркала и битое стекло: холодный гротеск, фиолетовое стекло, трещина. */
@@ -134,6 +137,7 @@
   --rule-h: 4px;
   --wash: linear-gradient(112deg, transparent 18%, rgb(215 195 255 / 0.09) 40%, transparent 41%, transparent 58%, rgb(215 195 255 / 0.06) 59%, transparent 72%);
   --hover-shadow: -2px 0 rgb(168 124 255 / 0.8), 2px 0 rgb(110 220 255 / 0.45);
+  --mk-hi: #f7f1ff; --mk-mid: #6f4db0; --mk-lo: #ecdfff;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -471,9 +475,37 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ——— Подвал ——— */
 .footer { border-top: 1px solid var(--line-soft); padding: 2rem 0; font-size: 0.8125rem; color: var(--dim); }
-.footer__row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.footer__row { display: flex; justify-content: space-between; align-items: center; gap: 1rem 2rem; flex-wrap: wrap; }
 .footer a { color: var(--smoke); }
 .footer a:hover { color: var(--bone); }
+.footer__end { display: inline-flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+
+/* ——— Подпись Weliable ———
+   «сделано в» — тихая подпись, знак + имя — единый логотип. Цвета — от альбома главной темы (t-* на подвале). */
+.footer__credit { display: contents; }
+.footer .credit {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  margin: -0.4rem -0.6rem; padding: 0.4rem 0.6rem; border-radius: 999px;
+  text-decoration: none; color: var(--dim);
+  transition: background 0.4s;
+}
+.credit__label { font-size: 0.75rem; letter-spacing: 0.02em; }
+.credit__lockup { display: inline-flex; align-items: center; gap: 0.4rem; }
+.credit__mark { display: block; flex: none; width: 1.05rem; height: 1.05rem; transition: filter 0.5s; }
+.credit__mark .mk-hi { stop-color: var(--mk-hi); }
+.credit__mark .mk-mid { stop-color: var(--mk-mid); }
+.credit__mark .mk-lo { stop-color: var(--mk-lo); }
+.credit__ring, .credit__edge { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.credit__nodes { transition: fill 0.4s; }
+.credit__name { font-size: 0.875rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1; color: var(--bone); transition: color 0.3s; }
+.footer .credit:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.credit:hover .credit__name { color: #fff; }
+.credit:hover .credit__mark { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 75%, transparent)); }
+.credit:hover .credit__nodes { fill: var(--accent); }
+/* кольцо и рёбра прорисовываются заново — как схема, которая собирается */
+.credit:hover .credit__ring { animation: wl-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.credit:hover .credit__edge { animation: wl-draw 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+@keyframes wl-draw { from { stroke-dashoffset: 1; } }
 
 /* ——— Страница теории ——— */
 .theory__hero { position: relative; isolation: isolate; padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(2.5rem, 5vw, 3.5rem); }
@@ -545,4 +577,5 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .chrome, .album-name, .album-name--damage::after { animation: none; }
   .chrome, .album-name { background-position: -60% 0, 0 0; }
   .row__btn::before, .row__title, .next, .contact::before { transition: none; }
+  .credit:hover .credit__ring, .credit:hover .credit__edge { animation: none; }
 }
