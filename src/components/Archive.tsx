@@ -30,6 +30,7 @@ export function Archive({ theories }: Props) {
   const sorted =
     sort === 'heat' ? theories : [...theories].sort(byDate)
 
+  // Раздел без теорий в каталоге не показывается: альбом появляется вместе с первым разбором.
   const sections: Section[] = [
     ...ALBUMS.map((a) => ({
       id: a.id,
@@ -44,7 +45,7 @@ export function Archive({ theories }: Props) {
       note: LOOSE.note,
       items: sorted.filter((x) => x.album === null),
     },
-  ]
+  ].filter((s) => s.items.length > 0)
 
   const visible = filter === 'all' ? sections : sections.filter((s) => s.id === filter)
   const tabs: { id: Filter; label: string; count: number }[] = [
@@ -63,20 +64,29 @@ export function Archive({ theories }: Props) {
           </div>
         </div>
 
-        <div className="tabs" role="group" aria-label="Категория">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={`tab t-${tab.id === 'all' ? 'loose' : tab.id}`}
-              aria-pressed={filter === tab.id}
-              onClick={() => setFilter(tab.id)}
-            >
-              <span className={tab.id === 'all' || tab.id === 'loose' ? undefined : 'tab__album'}>{tab.label}</span>
-              <span className="tab__count">{tab.count}</span>
-            </button>
-          ))}
-        </div>
+        {sections.length > 0 && (
+          <div className="tabs" role="group" aria-label="Категория">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className={`tab t-${tab.id === 'all' ? 'loose' : tab.id}`}
+                aria-pressed={filter === tab.id}
+                onClick={() => setFilter(tab.id)}
+              >
+                <span className={tab.id === 'all' || tab.id === 'loose' ? undefined : 'tab__album'}>{tab.label}</span>
+                <span className="tab__count">{tab.count}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {sections.length === 0 && (
+          <div className="empty">
+            <p>{t.empty}</p>
+            <a href="#submit" className="btn">{t.emptyCta}</a>
+          </div>
+        )}
 
         {visible.map((s) => (
           <div key={s.id} className={`group t-${s.id}`} data-world={s.id}>
@@ -94,18 +104,11 @@ export function Archive({ theories }: Props) {
                 </span>
               </div>
             </div>
-            {s.items.length === 0 ? (
-              <div className="empty">
-                <p>{t.empty}</p>
-                <a href="#submit" className="btn">{t.emptyCta}</a>
-              </div>
-            ) : (
-              <ul className="rows">
-                {s.items.map((item) => (
-                  <TheoryRow key={item.id} theory={item} />
-                ))}
-              </ul>
-            )}
+            <ul className="rows">
+              {s.items.map((item) => (
+                <TheoryRow key={item.id} theory={item} />
+              ))}
+            </ul>
           </div>
         ))}
       </div>

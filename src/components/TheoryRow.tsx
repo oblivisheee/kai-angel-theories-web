@@ -13,7 +13,10 @@ export function TheoryRow({ theory }: { theory: Theory }) {
         <span className="row__ref">{theory.ref}</span>
         <span className="row__main">
           <a className="row__link" href={theoryUrl(theory.slug)}>
-            <span className="row__title">{theory.title}</span>
+            {/* data-text: копии заголовка в псевдослоях — из них собран отклик на наведение у некоторых альбомов */}
+            <span className="row__title" data-text={theory.title}>
+              {theory.title}
+            </span>
           </a>
           <span className="row__excerpt">{theory.excerpt}</span>
           <span className="row__by">

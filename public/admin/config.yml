@@ -34,6 +34,8 @@ collections:
         - { name: shh-loud, label: "Shh!", field: album, pattern: "^shh-loud$" }
         - { name: shh, label: "Shh...", field: album, pattern: "^shh$" }
         - { name: damage, label: damage, field: album, pattern: "^damage$" }
+        - { name: angel-may-cry-2, label: ANGEL MAY CRY 2, field: album, pattern: "^angel-may-cry-2$" }
+        - { name: god-system, label: GOD SYSTEM, field: album, pattern: "^god-system$" }
         - { name: loose, label: Вне альбомов, field: album, pattern: "^$" }
         - { name: hot, label: "Горячие (4–5)", field: heat, pattern: "[45]" }
         - { name: hidden, label: Скрытые с сайта, field: published, pattern: false }
@@ -53,6 +55,8 @@ collections:
           - { label: "Shh!", value: shh-loud }
           - { label: "Shh...", value: shh }
           - { label: damage, value: damage }
+          - { label: ANGEL MAY CRY 2, value: angel-may-cry-2 }
+          - { label: GOD SYSTEM, value: god-system }
       - { label: Трек или тема, name: ref, widget: string, required: false, hint: "Например: трек 05, интро, визуал" }
       - { label: Кратко, name: excerpt, widget: text, hint: "1–2 предложения для списка и главной" }
       - label: Полный разбор
@@ -93,6 +97,14 @@ collections:
       - name: damage
         label: damage
         file: /content/albums/damage.json
+        fields: *album_fields
+      - name: angel-may-cry-2
+        label: ANGEL MAY CRY 2
+        file: /content/albums/angel-may-cry-2.json
+        fields: *album_fields
+      - name: god-system
+        label: GOD SYSTEM
+        file: /content/albums/god-system.json
         fields: *album_fields
       - name: loose
         label: Вне альбомов

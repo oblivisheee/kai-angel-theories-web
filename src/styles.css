@@ -155,6 +155,78 @@
   --mk-hi: #f7f1ff; --mk-mid: #6f4db0; --mk-lo: #ecdfff;
 }
 
+/* ANGEL MAY CRY 2 — готика Милана и Кёльна: тяжёлый гротеск обложки, высеченный в камне,
+   тёплый известняк и свет свечи под сводом. */
+.t-angel-may-cry-2 {
+  --accent: #b2aaa1;
+  --accent-deep: #3b3733;
+  --name-fill: linear-gradient(180deg, #fbfaf8 0%, #d8d5d0 34%, #625f5b 50%, #bcb8b3 63%, #f3f1ee 100%);
+  --album-font: 'Inter', var(--f-sans);
+  --album-weight: 900;
+  --album-track: -0.04em;
+  /* название длинное — держим его в одну строку на главной */
+  --ghost-scale: 0.62;
+  --title-font: var(--f-serif);
+  --title-style: normal;
+  --title-weight: 600;
+  --title-scale: 1.02;
+  --panel: #171614;
+  --glow: rgb(186 180 172 / 0.14);
+  --tab-on: #ddd8d1;
+  --tab-ink: #171614;
+  /* неф: свет из розы-окна сверху, понизу — слепая аркада, по ней вверх уходят колонны,
+     поперёк лежит косой луч из бокового окна */
+  --texture: radial-gradient(ellipse 45% 60% at 50% -14%, rgb(228 225 219 / 0.15), transparent 72%),
+    radial-gradient(circle at 50% 100%, transparent 43.5%, rgb(226 222 216 / 0.1) 44%, rgb(226 222 216 / 0.1) 45.3%, transparent 45.8%) 0 100% / 9rem 9rem repeat-x,
+    linear-gradient(104deg, transparent 24%, rgb(230 227 221 / 0.05) 33%, transparent 46%),
+    repeating-linear-gradient(90deg, rgb(224 220 214 / 0.05) 0 1px, transparent 1px 9rem),
+    radial-gradient(ellipse 85% 70% at 25% 115%, rgb(40 37 34 / 0.55), transparent 72%);
+  --texture-mask: linear-gradient(180deg, #000 6%, transparent 88%);
+  --rule: linear-gradient(90deg, var(--accent) 0 18%, rgb(226 222 216 / 0.2) 18% 100%);
+  --rule-h: 1px;
+  --wash: linear-gradient(90deg, rgb(196 190 182 / 0.13), transparent 62%);
+  --hover-shadow: 0 0 20px rgb(206 200 192 / 0.4);
+  --hover-anim: candle 0.9s var(--ease-in-out);
+  /* луча по строке нет: свет этого альбома живёт в самом заголовке */
+  --sweep: none;
+  --mk-hi: #fbfaf8; --mk-mid: #6f6b66; --mk-lo: #eeece8;
+}
+
+/* GOD SYSTEM — машинный зал: тяжёлый гротеск, стальной блик, холодный свет ламп коридора. */
+.t-god-system {
+  --accent: #6ec6e8;
+  --accent-deep: #123346;
+  --name-fill: linear-gradient(180deg, #ffffff 0%, #cfe2ec 34%, #2b4a5c 50%, #9fbecd 62%, #f2f8fb 100%);
+  --album-font: 'Archivo', var(--f-sans);
+  --album-weight: 900;
+  --album-track: -0.055em;
+  --ghost-scale: 0.94;
+  --title-font: 'Archivo', var(--f-sans);
+  --title-style: normal;
+  --title-weight: 500;
+  --title-scale: 0.82;
+  --panel: #07141c;
+  --glow: rgb(80 170 210 / 0.18);
+  --tab-on: #cfe2ec;
+  --tab-ink: #07141c;
+  /* коридор: потолочные лампы уходят в перспективу, поверх — машинная сетка */
+  --texture: repeating-linear-gradient(90deg, rgb(190 225 240 / 0.05) 0 1px, transparent 1px 62px),
+    repeating-linear-gradient(180deg, rgb(190 225 240 / 0.05) 0 1px, transparent 1px 62px),
+    linear-gradient(196deg, rgb(205 235 250 / 0.16), transparent 34%),
+    radial-gradient(ellipse 60% 70% at 50% -10%, rgb(70 140 180 / 0.28), transparent 72%);
+  --texture-mask: linear-gradient(180deg, #000 10%, transparent 80%);
+  --rule: linear-gradient(90deg, var(--accent) 0 14%, transparent 14% 16%, rgb(110 198 232 / 0.5) 16% 100%);
+  --rule-h: 2px;
+  --wash: linear-gradient(90deg, rgb(110 198 232 / 0.16), transparent 60%);
+  --hover-shadow: 0 0 18px rgb(110 198 232 / 0.55);
+  --hover-track: -0.01em;
+  /* жест наведения у этого альбома — не вспышка, а бегущий блик: см. steel-shimmer */
+  --hover-anim: none;
+  /* луча по строке нет: весь свет этого альбома живёт в самом заголовке */
+  --sweep: none;
+  --mk-hi: #ffffff; --mk-mid: #3d6b82; --mk-lo: #e2f0f7;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 /* ——— Эмбиент: свечение страницы перетекает в цвет альбома, который сейчас на экране ——— */
@@ -171,6 +243,8 @@ html {
 html[data-world='shh'] { --amb: rgb(60 100 240 / 0.2); --amb-line: #1b2750; }
 html[data-world='shh-loud'] { --amb: rgb(220 30 50 / 0.2); --amb-line: #4a0d15; }
 html[data-world='damage'] { --amb: rgb(140 80 230 / 0.18); --amb-line: #2f1d52; }
+html[data-world='god-system'] { --amb: rgb(70 150 200 / 0.2); --amb-line: #14364a; }
+html[data-world='angel-may-cry-2'] { --amb: rgb(172 166 158 / 0.12); --amb-line: #34302c; }
 
 body {
   margin: 0;
@@ -200,6 +274,8 @@ body::after {
 .t-shh::selection, .t-shh ::selection { background: #2a4499; }
 .t-shh-loud::selection, .t-shh-loud ::selection { background: #b01526; }
 .t-damage::selection, .t-damage ::selection { background: #5a33a8; }
+.t-god-system::selection, .t-god-system ::selection { background: #17556e; }
+.t-angel-may-cry-2::selection, .t-angel-may-cry-2 ::selection { background: #4b4741; }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--void); }
 ::-webkit-scrollbar-thumb { background: #2a2a31; border: 3px solid var(--void); border-radius: 10px; }
@@ -280,12 +356,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .group__head:hover .album-name--damage::after,
 .theory__hero:hover .album-name--damage::after { transform: translate(0.11em, 0.08em) rotate(-2.2deg); filter: brightness(1.35); } }
 
-/* ——— Shh... и Shh!: фишки названия тем же приёмом, что у damage ———
+/* ——— Shh..., Shh! и GOD SYSTEM: фишки названия тем же приёмом, что у damage ———
    Само название прозрачно и держит место; видимые буквы — слой ::before (хром альбома + блик),
    фишка — слой ::after под ним. Хром на ::before, а не на самом элементе: иначе фон, обрезанный
    по тексту, закрасил бы и копию в ::after. */
 .album-name--shh,
-.album-name--shh-loud {
+.album-name--shh-loud,
+.album-name--god-system,
+.album-name--angel-may-cry-2 {
   position: relative;
   z-index: 0;
   background: none;
@@ -293,15 +371,21 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .album-name--shh::before,
 .album-name--shh-loud::before,
+.album-name--god-system::before,
+.album-name--angel-may-cry-2::before,
 .album-name--shh::after,
-.album-name--shh-loud::after {
+.album-name--shh-loud::after,
+.album-name--god-system::after,
+.album-name--angel-may-cry-2::after {
   content: attr(data-text) / '';
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 .album-name--shh::before,
-.album-name--shh-loud::before {
+.album-name--shh-loud::before,
+.album-name--god-system::before,
+.album-name--angel-may-cry-2::before {
   background-image: var(--glint), var(--name-fill);
   background-size: 260% 100%, 100% 100%;
   background-position: 160% 0, 0 0;
@@ -312,7 +396,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   animation: glint 2.2s 0.5s cubic-bezier(0.3, 0, 0.2, 1) forwards;
 }
 .album-name--shh::after,
-.album-name--shh-loud::after { z-index: -1; }
+.album-name--shh-loud::after,
+.album-name--god-system::after,
+.album-name--angel-may-cry-2::after { z-index: -1; }
 
 /* Shh... — шёпот: за буквами тянется размытое эхо. При наведении оно отплывает и растворяется,
    как слово, сказанное шёпотом, — остаётся только чистый силуэт. */
@@ -349,6 +435,46 @@ button { font: inherit; color: inherit; cursor: pointer; }
   71% { transform: scale(1); opacity: 0; }
   100% { transform: scale(1.05); opacity: 0.5; }
 }
+
+/* GOD SYSTEM — машинное считывание: за буквами идёт холодная копия, видимая только в бегущих
+   строках развёртки. При наведении развёртка останавливается и копия встаёт на место — система
+   опознала и захватила сигнал. */
+.album-name--god-system::after {
+  color: rgb(150 225 255 / 0.55);
+  filter: drop-shadow(0 0 0.28em rgb(90 190 235 / 0.5));
+  transform: translate(0.012em, -0.012em);
+  -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 0.055em, transparent 0.055em 0.16em);
+  mask-image: repeating-linear-gradient(180deg, #000 0 0.055em, transparent 0.055em 0.16em);
+  -webkit-mask-size: 100% 0.16em;
+  mask-size: 100% 0.16em;
+  animation: scanline 2.4s linear infinite;
+  transition: transform 0.45s var(--ease), color 0.45s var(--ease);
+}
+@keyframes scanline {
+  to { -webkit-mask-position: 0 0.16em; mask-position: 0 0.16em; }
+}
+@media (hover: hover) { .world:hover .album-name--god-system::after,
+.group__head:hover .album-name--god-system::after,
+.theory__hero:hover .album-name--god-system::after {
+  animation-play-state: paused;
+  transform: none;
+  color: rgb(200 245 255 / 0.75);
+} }
+
+/* ANGEL MAY CRY 2 — надпись высечена в камне: под буквами лежит их тень, поэтому они читаются
+   как рельеф. При наведении свет уходит вбок, тень удлиняется и по резьбе проходит тепло свечи. */
+.album-name--angel-may-cry-2::after {
+  color: rgb(10 6 4 / 0.9);
+  transform: translate(0.016em, 0.022em);
+  filter: blur(0.006em);
+  transition: transform 0.9s var(--ease), filter 0.9s var(--ease);
+}
+@media (hover: hover) { .world:hover .album-name--angel-may-cry-2::after,
+.group__head:hover .album-name--angel-may-cry-2::after,
+.theory__hero:hover .album-name--angel-may-cry-2::after {
+  transform: translate(0.03em, 0.042em);
+  filter: blur(0.01em) drop-shadow(0 0 0.5em rgb(206 200 192 / 0.4));
+} }
 
 /* ——— Мир альбома: фактура + пятно света за курсором ——— */
 .world {
@@ -461,6 +587,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tab.t-shh .tab__album { letter-spacing: 0.04em; font-weight: 400; }
 .tab.t-shh-loud .tab__album { font-size-adjust: cap-height 0.86; letter-spacing: 0.02em; }
 .tab.t-shh:not([aria-pressed='true']) { color: var(--bone); }
+.tab.t-god-system .tab__album { font-size-adjust: cap-height 0.8; letter-spacing: -0.02em; }
+.tab.t-angel-may-cry-2 .tab__album { font-size-adjust: cap-height 0.78; letter-spacing: -0.015em; }
 .tab__count { font-size: 0.75rem; align-self: center; opacity: 0.6; font-variant-numeric: tabular-nums; }
 
 /* Каждая группа — полоса во всю ширину со своей фактурой, края растворяются в соседей. */
@@ -480,6 +608,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .group__head::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: var(--rule-h); background: var(--rule); }
 .group__title { font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1; margin: 0; }
+.group__title.album-name--angel-may-cry-2 { font-size: clamp(1.9rem, 5.2vw, 3.5rem); }
 .group__title.album-name--damage { -webkit-box-reflect: below -0.12em linear-gradient(transparent 60%, rgb(0 0 0 / 0.28)); margin-bottom: 0.3em; }
 .group__title--plain { font: italic 500 clamp(2.5rem, 5.5vw, 3.75rem)/1 var(--f-serif); color: var(--bone); }
 .group__meta { display: grid; gap: 0.35rem; justify-items: end; text-align: right; }
@@ -565,6 +694,144 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes mirror-glitch {
   0% { text-shadow: -6px 0 rgb(168 124 255 / 0.9), 6px 0 rgb(110 220 255 / 0.6); }
   35% { text-shadow: 3px 0 rgb(168 124 255 / 0.85), -3px 0 rgb(110 220 255 / 0.5); }
+  100% { text-shadow: var(--hover-shadow); }
+}
+
+/* GOD SYSTEM — система считывает запись: заголовок рассекается на две полосы, они расходятся
+   и рывками встают на место, после чего строка наливается сталью и по ней идёт блик.
+   Полосы — копии заголовка в псевдослоях (data-text), поэтому они рвутся ровно по буквам. */
+.t-god-system .row__title::before,
+.t-god-system .row__title::after {
+  content: attr(data-text) / '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+}
+.t-god-system .row__title::before { color: rgb(150 230 255 / 0.95); clip-path: inset(0 0 52% 0); }
+.t-god-system .row__title::after { color: rgb(255 205 150 / 0.6); clip-path: inset(48% 0 0 0); }
+@media (hover: hover) {
+  .t-god-system .row__btn:hover .row__title::before { animation: slice-lock 0.5s steps(1, end); }
+  .t-god-system .row__btn:hover .row__title::after { animation: slice-lock-alt 0.5s steps(1, end); }
+}
+/* шаги, а не плавность: машина не подводит запись, а защёлкивает её */
+@keyframes slice-lock {
+  0% { opacity: 1; transform: translateX(-0.6em); }
+  30% { opacity: 1; transform: translateX(0.24em); }
+  55% { opacity: 1; transform: translateX(-0.12em); }
+  80% { opacity: 1; transform: translateX(0.04em); }
+  100% { opacity: 0; transform: none; }
+}
+@keyframes slice-lock-alt {
+  0% { opacity: 1; transform: translateX(0.6em); }
+  30% { opacity: 1; transform: translateX(-0.24em); }
+  55% { opacity: 1; transform: translateX(0.12em); }
+  80% { opacity: 1; transform: translateX(-0.04em); }
+  100% { opacity: 0; transform: none; }
+}
+
+/* Дальше — сталь: заливка лежит под буквами и открывается, когда они становятся прозрачными,
+   а по ней бесконечно ходит блик, как свет ламп по корпусу машины. */
+.t-god-system .row__title {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  /* своя сталь, светлее, чем у названия альбома: на кегле строки тёмная середина хрома
+     сделала бы заголовок тусклее обычного */
+  background-image: var(--glint), linear-gradient(180deg, #ffffff 0%, #eaf4fa 30%, #9dc0d2 52%, #e2f0f7 68%, #ffffff 100%);
+  background-size: 260% 100%, 100% 100%;
+  background-position: 160% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: color var(--t) var(--ease), text-shadow var(--t-fast), letter-spacing var(--t) var(--ease);
+}
+@media (hover: hover) { .t-god-system .row__btn:hover .row__title {
+  /* прозрачность, а не `transparent`: иначе по дороге цвет уходит в чёрный */
+  color: rgb(230 227 220 / 0);
+  animation: steel-shimmer 2.6s linear infinite;
+} }
+@keyframes steel-shimmer {
+  from { background-position: 170% 0, 0 0; }
+  to { background-position: -70% 0, 0 0; }
+}
+
+/* ANGEL MAY CRY 2 — свет у строки от того же пламени, что освещает заголовок: на стену за
+   текстом ложится тёплое пятно и косой отблеск из окна, и оба дышат в такт свече (те же keyframes
+   flame, что у света на буквах). Ничего нового в кадре не появляется — только меняется освещение. */
+.t-angel-may-cry-2 .row__btn::after {
+  background:
+    radial-gradient(ellipse 34% 95% at 30% 40%, rgb(236 232 226 / 0.17), transparent 72%),
+    linear-gradient(104deg, transparent 30%, rgb(230 227 221 / 0.06) 39%, transparent 52%);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 1rem, #000 calc(100% - 1rem), transparent);
+  opacity: 0;
+  transition: opacity var(--t-slow) var(--ease);
+}
+/* animation: none у общего «пролёта света» — вместо него тот же трепет, что у пламени */
+@media (hover: hover) { .t-angel-may-cry-2 .row__btn:hover::after { opacity: 1; animation: flame 2.6s ease-in-out infinite; } }
+
+/* ANGEL MAY CRY 2 — свеча у стены: заголовок высечен в камне, под ним лежит тень резьбы,
+   а сверху по буквам ходит тёплый свет. При наведении пламя будто подносят ближе — тень
+   удлиняется и дрожит, свет разгорается. */
+.t-angel-may-cry-2 .row__title {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+}
+.t-angel-may-cry-2 .row__title::before { transform-origin: 20% 100%; }
+.t-angel-may-cry-2 .row__title::before,
+.t-angel-may-cry-2 .row__title::after {
+  content: attr(data-text) / '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+}
+/* силуэт на стене: тень заголовка, отброшенная свечой */
+.t-angel-may-cry-2 .row__title::before {
+  color: rgb(6 3 2 / 0.9);
+  transform: translate(0.04em, 0.05em) scale(1.04);
+  filter: blur(0.03em);
+  transition: opacity var(--t), transform 0.8s var(--ease), filter 0.8s var(--ease);
+}
+/* свет пламени */
+.t-angel-may-cry-2 .row__title::after {
+  color: rgb(234 230 223 / 0.9);
+  transform: translate(-0.022em, -0.03em);
+  filter: blur(0.09em);
+  transition: opacity var(--t);
+}
+@media (hover: hover) {
+  .t-angel-may-cry-2 .row__btn:hover .row__title::before {
+    opacity: 1;
+    filter: blur(0.14em);
+    animation: draft 4.6s var(--ease-in-out) infinite;
+  }
+  .t-angel-may-cry-2 .row__btn:hover .row__title::after { opacity: 1; animation: flame 2.6s ease-in-out infinite; }
+}
+/* тень водит по стене, будто пламя качает сквозняком */
+@keyframes draft {
+  0%, 100% { transform: translate(0.05em, 0.05em) scale(1.08) skewX(-2.5deg); }
+  35% { transform: translate(0.015em, 0.035em) scale(1.05) skewX(2deg); }
+  62% { transform: translate(0.075em, 0.065em) scale(1.11) skewX(-4.5deg); }
+  80% { transform: translate(0.03em, 0.04em) scale(1.06) skewX(0.5deg); }
+}
+@keyframes flame {
+  0%, 100% { opacity: 1; filter: blur(0.09em); }
+  35% { opacity: 0.5; filter: blur(0.15em); }
+  60% { opacity: 0.95; filter: blur(0.06em); }
+  80% { opacity: 0.68; filter: blur(0.12em); }
+}
+
+/* ANGEL MAY CRY 2 — заголовок разгорается, как свеча на сквозняке, и успокаивается */
+@keyframes candle {
+  0% { text-shadow: 0 0 0.2em rgb(198 192 184 / 0.3); }
+  30% { text-shadow: 0 0 1em rgb(226 222 215 / 0.8), 0 0 0.25em rgb(248 246 242 / 0.45); }
+  55% { text-shadow: 0 0 0.45em rgb(198 192 184 / 0.45); }
+  75% { text-shadow: 0 0 0.9em rgb(226 222 215 / 0.65); }
   100% { text-shadow: var(--hover-shadow); }
 }
 
@@ -716,14 +983,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; transition: none; }
-  .chrome, .album-name, .album-name--shh::before, .album-name--shh-loud::before { animation: none; }
-  .album-name--shh::before, .album-name--shh-loud::before { background-position: -60% 0, 0 0; }
+  .chrome, .album-name, .album-name--shh::before, .album-name--shh-loud::before, .album-name--god-system::before { animation: none; }
+  .album-name--shh::before, .album-name--shh-loud::before, .album-name--god-system::before { background-position: -60% 0, 0 0; }
+  /* развёртка не бежит: строки просто стоят за буквами */
+  .album-name--god-system::after { animation: none; }
   .album-name--shh::after { transition: opacity 0.3s; }
   .album-name--damage::after { transition: filter 0.3s; }
+  .album-name--angel-may-cry-2::after { transition: filter 0.3s; }
   .world:hover .album-name--shh::after, .group__head:hover .album-name--shh::after, .theory__hero:hover .album-name--shh::after { transform: translateX(0.07em); }
   .world:hover .album-name--shh-loud::after, .group__head:hover .album-name--shh-loud::after, .theory__hero:hover .album-name--shh-loud::after { animation: none; opacity: 0.8; }
   .chrome, .album-name { background-position: -60% 0, 0 0; }
   .row__btn::before, .row__title, .t-shh-loud .row__title, .next, .contact::before { transition: none; }
   .row__btn:hover .row__title, .row__btn:hover::before, .row__btn:hover::after { animation: none; }
+  /* сталь остаётся, блик по ней не бежит */
+  .t-god-system .row__btn:hover .row__title { background-position: 40% 0, 0 0; }
+  .t-god-system .row__btn:hover .row__title::before, .t-god-system .row__btn:hover .row__title::after { animation: none; opacity: 0; }
+  .t-angel-may-cry-2 .row__btn:hover .row__title::before, .t-angel-may-cry-2 .row__btn:hover .row__title::after { animation: none; }
+  .t-angel-may-cry-2 .row__btn::after { transition: none; }
   .credit:hover .credit__ring, .credit:hover .credit__edge { animation: none; }
 }

@@ -6,7 +6,7 @@ import type { AlbumId, Theory } from '../types'
  */
 
 /** Порядок альбомов на сайте — от новых к старым. Стиль каждого задан темой t-* в styles.css. */
-export const ALBUM_ORDER: AlbumId[] = ['shh-loud', 'shh', 'damage']
+export const ALBUM_ORDER: AlbumId[] = ['shh-loud', 'shh', 'damage', 'angel-may-cry-2', 'god-system']
 
 export type TheoryFile = Partial<Omit<Theory, 'id' | 'album' | 'heat'>> & {
   album?: string | null
