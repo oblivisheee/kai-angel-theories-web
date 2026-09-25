@@ -59,6 +59,49 @@
   --mk-hi: #fdfdff; --mk-mid: #6b6b75; --mk-lo: #f1f1f5;
 }
 
+/* Shh? — третья сторона тишины, вопрос: плёнка нефти на ночной воде. Название переливается
+   красным, фиолетовым и зелёным, и каждая буква ловит свой цвет. */
+.t-shh-question {
+  --accent: #b865ff;
+  --accent-deep: #3d1266;
+  /* один период перелива — ровно ширина слова (слой вдвое шире и повторяет цвета дважды),
+     поэтому на каждую букву приходится свой цвет, а сдвиг на период зациклен без шва.
+     Между зелёным и красным — тёмный провал, как на масляной плёнке, чтобы не мутнело в бурый. */
+  --iris: linear-gradient(90deg,
+    #ff2e55 0%, #d13bff 6%, #9446ff 10%, #2effa0 17%, #0e6b45 21%, #7a0d2a 24%,
+    #ff2e55 50%, #d13bff 56%, #9446ff 60%, #2effa0 67%, #0e6b45 71%, #7a0d2a 74%, #ff2e55 100%);
+  /* объём хрома поверх перелива: светлый верх и низ, тёмный пояс посередине */
+  --iris-shade: linear-gradient(180deg, rgb(255 255 255 / 0.75) 0%, rgb(255 255 255 / 0.2) 36%, rgb(0 0 0 / 0.5) 51%, rgb(255 255 255 / 0.1) 64%, rgb(255 255 255 / 0.6) 100%);
+  --name-fill: linear-gradient(180deg, #ffe6ee 0%, #e0a8ff 36%, #3d1266 50%, #7fe8c0 63%, #f2e8ff 100%);
+  --album-font: 'Instrument Serif', var(--f-serif);
+  --album-weight: 400;
+  --album-track: -0.01em;
+  --ghost-scale: 1.12;
+  --title-font: 'Instrument Serif', var(--f-serif);
+  --title-style: italic;
+  --title-weight: 400;
+  --title-scale: 1.08;
+  --panel: #0c0714;
+  --glow: rgb(170 80 255 / 0.18);
+  --tab-on: #d9b8ff;
+  --tab-ink: #0c0714;
+  /* масляная плёнка: три пятна цвета расплываются друг в друга, по ним — тонкие полосы интерференции */
+  --texture: radial-gradient(ellipse 40% 70% at 12% 10%, rgb(255 46 85 / 0.16), transparent 70%),
+    radial-gradient(ellipse 45% 80% at 52% -10%, rgb(160 70 255 / 0.2), transparent 70%),
+    radial-gradient(ellipse 40% 70% at 92% 20%, rgb(46 255 160 / 0.12), transparent 70%),
+    repeating-radial-gradient(ellipse 120% 80% at 50% -30%, rgb(220 190 255 / 0.045) 0 1px, transparent 1px 14px);
+  --texture-mask: linear-gradient(180deg, #000 8%, transparent 82%);
+  --rule: linear-gradient(90deg, #ff2e55, #b865ff 35%, #2effa0 70%, rgb(46 255 160 / 0.15));
+  --rule-h: 2px;
+  --wash: linear-gradient(90deg, rgb(255 46 85 / 0.09), rgb(170 80 255 / 0.1) 35%, rgb(46 255 160 / 0.06) 65%, transparent);
+  /* только размытый ореол: тень рисуется поверх заливки, обрезанной по тексту, и чёткая кайма замутила бы буквы */
+  --hover-shadow: 0 0 18px rgb(170 80 255 / 0.4);
+  /* жест наведения — не вспышка, а перелив по самому заголовку: см. .t-shh-question .row__title */
+  --hover-anim: none;
+  --sweep: none;
+  --mk-hi: #ffe6ee; --mk-mid: #8a3fd6; --mk-lo: #c8ffe6;
+}
+
 /* Shh... — шёпот: синий бархат ночного Голливуда, ар-деко, лунное серебро. */
 .t-shh {
   --accent: #5b8cff;
@@ -240,6 +283,7 @@ html {
   scrollbar-color: #2e2e35 var(--void);
   background: var(--void);
 }
+html[data-world='shh-question'] { --amb: rgb(150 60 230 / 0.18); --amb-line: #35124d; }
 html[data-world='shh'] { --amb: rgb(60 100 240 / 0.2); --amb-line: #1b2750; }
 html[data-world='shh-loud'] { --amb: rgb(220 30 50 / 0.2); --amb-line: #4a0d15; }
 html[data-world='damage'] { --amb: rgb(140 80 230 / 0.18); --amb-line: #2f1d52; }
@@ -271,6 +315,7 @@ body::after {
 }
 
 ::selection { background: var(--wound); color: #fff; }
+.t-shh-question::selection, .t-shh-question ::selection { background: #6a2aa8; }
 .t-shh::selection, .t-shh ::selection { background: #2a4499; }
 .t-shh-loud::selection, .t-shh-loud ::selection { background: #b01526; }
 .t-damage::selection, .t-damage ::selection { background: #5a33a8; }
@@ -461,6 +506,58 @@ button { font: inherit; color: inherit; cursor: pointer; }
   color: rgb(200 245 255 / 0.75);
 } }
 
+/* Shh? — перелив: видимые буквы (::before) залиты плёнкой, которая бесконечно течёт вдоль слова,
+   поэтому каждая буква по очереди проходит красный, фиолетовый и зелёный. Под ними (::after) —
+   размытый ореол из той же плёнки, текущий навстречу: края букв светятся не тем цветом, что их
+   середина. При наведении ореол разгорается и поток ускоряется — вопрос повисает в воздухе.
+   Свой блик не нужен: свет этого названия и так всё время в движении. */
+.album-name--shh-question {
+  position: relative;
+  z-index: 0;
+  background: none;
+  animation: none;
+}
+.album-name--shh-question::before,
+.album-name--shh-question::after {
+  content: attr(data-text) / '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--iris-shade), var(--iris);
+  background-size: 100% 100%, 200% 100%;
+  background-position: 0 0, 0% 0;
+  background-repeat: no-repeat;
+  background-blend-mode: overlay, normal;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: iris 7s linear infinite;
+}
+.album-name--shh-question::after {
+  z-index: -1;
+  background-image: var(--iris);
+  background-size: 200% 100%;
+  animation-direction: reverse;
+  filter: blur(0.06em) saturate(1.4);
+  opacity: 0.55;
+  transform: scale(1.02);
+  transition: opacity 0.8s var(--ease), filter 0.8s var(--ease), transform 0.8s var(--ease);
+}
+@keyframes iris { to { background-position: 0 0, 100% 0; } }
+@media (hover: hover) { .world:hover .album-name--shh-question::after,
+.group__head:hover .album-name--shh-question::after,
+.theory__hero:hover .album-name--shh-question::after {
+  opacity: 0.9;
+  filter: blur(0.11em) saturate(1.7);
+  transform: scale(1.05);
+}
+.world:hover .album-name--shh-question::before,
+.group__head:hover .album-name--shh-question::before,
+.theory__hero:hover .album-name--shh-question::before,
+.world:hover .album-name--shh-question::after,
+.group__head:hover .album-name--shh-question::after,
+.theory__hero:hover .album-name--shh-question::after { animation-duration: 3.5s; } }
+
 /* ANGEL MAY CRY 2 — надпись высечена в камне: под буквами лежит их тень, поэтому они читаются
    как рельеф. При наведении свет уходит вбок, тень удлиняется и по резьбе проходит тепло свечи. */
 .album-name--angel-may-cry-2::after {
@@ -587,6 +684,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tab.t-shh .tab__album { letter-spacing: 0.04em; font-weight: 400; }
 .tab.t-shh-loud .tab__album { font-size-adjust: cap-height 0.86; letter-spacing: 0.02em; }
 .tab.t-shh:not([aria-pressed='true']) { color: var(--bone); }
+.tab.t-shh-question .tab__album { font-size-adjust: cap-height 0.72; font-style: italic; }
 .tab.t-god-system .tab__album { font-size-adjust: cap-height 0.8; letter-spacing: -0.02em; }
 .tab.t-angel-may-cry-2 .tab__album { font-size-adjust: cap-height 0.78; letter-spacing: -0.015em; }
 .tab__count { font-size: 0.75rem; align-self: center; opacity: 0.6; font-variant-numeric: tabular-nums; }
@@ -696,6 +794,24 @@ button { font: inherit; color: inherit; cursor: pointer; }
   35% { text-shadow: 3px 0 rgb(168 124 255 / 0.85), -3px 0 rgb(110 220 255 / 0.5); }
   100% { text-shadow: var(--hover-shadow); }
 }
+
+/* Shh? — заголовок наливается той же плёнкой, что и название альбома, и она течёт по буквам,
+   пока курсор на строке. */
+.t-shh-question .row__title {
+  display: inline-block;
+  background-image: var(--iris-shade), var(--iris);
+  background-size: 100% 100%, 200% 100%;
+  background-position: 0 0, 0% 0;
+  background-repeat: no-repeat;
+  background-blend-mode: soft-light, normal;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+@media (hover: hover) { .t-shh-question .row__btn:hover .row__title {
+  /* прозрачность, а не `transparent`: иначе по дороге цвет уходит в чёрный */
+  color: rgb(230 227 220 / 0);
+  animation: iris 4s linear infinite;
+} }
 
 /* GOD SYSTEM — система считывает запись: заголовок рассекается на две полосы, они расходятся
    и рывками встают на место, после чего строка наливается сталью и по ней идёт блик.
@@ -987,6 +1103,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .album-name--shh::before, .album-name--shh-loud::before, .album-name--god-system::before { background-position: -60% 0, 0 0; }
   /* развёртка не бежит: строки просто стоят за буквами */
   .album-name--god-system::after { animation: none; }
+  /* перелив стоит: цвета остаются на буквах, но не текут */
+  .album-name--shh-question::before, .album-name--shh-question::after, .t-shh-question .row__btn:hover .row__title { animation: none; }
   .album-name--shh::after { transition: opacity 0.3s; }
   .album-name--damage::after { transition: filter 0.3s; }
   .album-name--angel-may-cry-2::after { transition: filter 0.3s; }

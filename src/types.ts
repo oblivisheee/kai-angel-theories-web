@@ -1,4 +1,4 @@
-export type AlbumId = 'angel-may-cry-2' | 'damage' | 'god-system' | 'shh' | 'shh-loud'
+export type AlbumId = 'angel-may-cry-2' | 'damage' | 'god-system' | 'shh' | 'shh-loud' | 'shh-question'
 
 /** `loose` — теория не привязана ни к одному альбому. */
 export type CategoryId = AlbumId | 'loose'
