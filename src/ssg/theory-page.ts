@@ -1,4 +1,4 @@
-import type { Album, Theory } from '../types'
+import type { Album, Theory } from '../types.js'
 import { authorUrl, formatDate, theoryUrl } from '../lib/theory-data.js'
 import { renderMarkdown } from '../lib/markdown.js'
 import { CREDIT_HTML } from '../lib/credit.js'
@@ -95,7 +95,7 @@ export function renderTheoryPage({ theory: t, album, looseTitle, related, site, 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500;1,600&family=Onest:wght@300;400;500&family=UnifrakturMaguntia&family=Poiret+One&family=Playfair+Display:ital,wght@1,500&family=Syne:wght@700&family=Unbounded:wght@300&family=Anton&family=Oswald:wght@400&family=Archivo:wght@500;900&family=Inter:wght@900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500;1,600&family=Onest:wght@300;400;500&family=UnifrakturMaguntia&family=Poiret+One&family=Playfair+Display:ital,wght@1,500&family=Syne:wght@700&family=Unbounded:wght@300&family=Anton&family=Oswald:wght@400&family=Archivo:wght@500;900&family=Inter:wght@900&family=Instrument+Serif:ital@0;1&family=New+Rocker&display=swap" rel="stylesheet" />
     ${styles}
   </head>
   <body class="theory-page">

@@ -1,4 +1,4 @@
-import type { AlbumId, Theory } from '../types'
+import type { AlbumId, Theory } from '../types.js'
 
 /**
  * Приведение файлов content/theories к Theory. Общий код для сайта (import.meta.glob)
@@ -6,7 +6,7 @@ import type { AlbumId, Theory } from '../types'
  */
 
 /** Порядок альбомов на сайте — от новых к старым. Стиль каждого задан темой t-* в styles.css. */
-export const ALBUM_ORDER: AlbumId[] = ['shh-question', 'shh-loud', 'shh', 'damage', 'angel-may-cry-2', 'god-system']
+export const ALBUM_ORDER: AlbumId[] = ['heavy-metal-3', 'shh-question', 'shh-loud', 'shh', 'damage', 'angel-may-cry-2', 'god-system']
 
 export type TheoryFile = Partial<Omit<Theory, 'id' | 'album' | 'heat'>> & {
   album?: string | null

@@ -3,9 +3,9 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import { buildContent } from './src/lib/content-model'
-import { readLocalContent } from './src/lib/content-fs'
-import { renderTheoryBySlug } from './src/ssg/theory-page'
+import { buildContent } from './src/lib/content-model.js'
+import { readLocalContent } from './src/lib/content-fs.js'
+import { renderTheoryBySlug } from './src/ssg/theory-page.js'
 
 // Точка в начале — любой поддомен: адрес ngrok меняется при каждом запуске туннеля.
 const allowedHosts = ['.ngrok-free.app', '.ngrok.app', '.ngrok.io']
@@ -51,7 +51,7 @@ function siteMeta(): Plugin {
       order: 'pre',
       handler(html, ctx) {
         if (ctx.path.startsWith('/admin')) return html
-        const { meta } = JSON.parse(readFileSync(resolve(__dirname, 'content/site.json'), 'utf8'))
+        const { meta } = JSON.parse(readFileSync(resolve(import.meta.dirname, 'content/site.json'), 'utf8'))
         return html.replaceAll('%SITE_TITLE%', esc(meta.title)).replaceAll('%SITE_DESCRIPTION%', esc(meta.description))
       },
     },
@@ -68,7 +68,7 @@ function theoryPages(): Plugin {
     configureServer(server) {
       // шаблон страниц импортирован конфигом, поэтому его правки требуют перезапуска dev-сервера
       const templateFiles = ['src/ssg/theory-page.ts', 'src/lib/theory-data.ts', 'src/lib/markdown.ts', 'src/lib/credit.ts', 'src/lib/content-model.ts'].map((f) =>
-        resolve(__dirname, f),
+        resolve(import.meta.dirname, f),
       )
       server.watcher.on('change', (file) => {
         if (templateFiles.includes(file)) server.restart()
@@ -76,7 +76,7 @@ function theoryPages(): Plugin {
       server.middlewares.use((req, res, next) => {
         const m = req.url?.match(/^\/t\/([^/?#]+)\/?(?:[?#].*)?$/)
         if (!m) return next()
-        const html = renderTheoryBySlug(buildContent(readLocalContent(__dirname)), decodeURIComponent(m[1]), '<link rel="stylesheet" href="/src/styles.css" />')
+        const html = renderTheoryBySlug(buildContent(readLocalContent(import.meta.dirname)), decodeURIComponent(m[1]), '<link rel="stylesheet" href="/src/styles.css" />')
         if (!html) return next()
         res.setHeader('Content-Type', 'text/html; charset=utf-8')
         res.end(html)
@@ -90,7 +90,7 @@ export default defineConfig({
   define: { __CMS_REPO__: JSON.stringify(cmsRepo()), __CMS_BRANCH__: JSON.stringify(cmsBranch()) },
   build: {
     rollupOptions: {
-      input: { main: resolve(__dirname, 'index.html'), admin: resolve(__dirname, 'admin/index.html') },
+      input: { main: resolve(import.meta.dirname, 'index.html'), admin: resolve(import.meta.dirname, 'admin/index.html') },
       output: {
         // стили — по постоянному адресу /assets/main.css: на него ссылаются страницы теорий из функции Vercel
         assetFileNames: (asset) => (asset.names?.[0]?.endsWith('.css') ? 'assets/[name][extname]' : 'assets/[name]-[hash][extname]'),

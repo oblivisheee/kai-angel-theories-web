@@ -1,4 +1,4 @@
-import type { Album, Theory } from '../types'
+import type { Album, Theory } from '../types.js'
 import { ALBUM_ORDER, toTheories, type TheoryFile } from './theory-data.js'
 
 /**

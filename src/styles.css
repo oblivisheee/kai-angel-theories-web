@@ -59,6 +59,45 @@
   --mk-hi: #fdfdff; --mk-mid: #6b6b75; --mk-lo: #f1f1f5;
 }
 
+/* HEAVY METAL 3 — чёрная ртуть: шипастая метал-готика в духе HM2, отлитый из тёмного жидкого металла.
+   Буквы почти сливаются с фоном и читаются только по бегущему отсвету; снизу металл стекает,
+   а в потёках светится то, чему нет названия, — кислотный отблеск. Альбом ещё не вышел. */
+.t-heavy-metal-3 {
+  --accent: #c9ff3d;
+  --accent-deep: #1f2a08;
+  --name-fill: linear-gradient(180deg, #5c6166 0%, #1c1e21 30%, #050506 50%, #2a2d31 64%, #8b9197 100%);
+  /* ртутный отсвет: широкая мягкая полоса с узким белым сердечником, проходит по кругу без конца */
+  --mercury: linear-gradient(100deg, transparent 30%, rgb(200 210 215 / 0.35) 42%, #fff 50%, rgb(200 210 215 / 0.35) 58%, transparent 70%);
+  /* шипастая готика метал-логотипа, как на обложке HEAVY METAL 2 */
+  --album-font: 'New Rocker', var(--f-black);
+  --album-weight: 400;
+  --album-track: 0;
+  /* название длинное — держим его в одну строку на главной */
+  --ghost-scale: 0.66;
+  --title-font: var(--f-serif);
+  --title-style: normal;
+  --title-weight: 600;
+  --title-scale: 1.04;
+  --panel: #060707;
+  --glow: rgb(201 255 61 / 0.08);
+  --tab-on: #d4d9dc;
+  --tab-ink: #060707;
+  /* поверхность ртути: сверху падает капля, от неё расходятся кольца; сбоку — едва заметный кислотный отсвет */
+  --texture: repeating-radial-gradient(ellipse 140% 60% at 62% -8%, rgb(215 222 226 / 0.05) 0 1px, transparent 1.5px 22px),
+    radial-gradient(ellipse 30% 40% at 62% -8%, rgb(230 236 240 / 0.14), transparent 70%),
+    radial-gradient(ellipse 35% 60% at 4% 100%, rgb(201 255 61 / 0.06), transparent 70%),
+    linear-gradient(180deg, rgb(120 128 134 / 0.08), transparent 45%);
+  --texture-mask: radial-gradient(ellipse 90% 110% at 62% 0%, #000 25%, transparent 80%);
+  --rule: linear-gradient(90deg, #e6ebee, #5c6166 30%, #1c1e21 60%, rgb(201 255 61 / 0.35) 61% 62%, #1c1e21 63%);
+  --rule-h: 1px;
+  --wash: linear-gradient(90deg, rgb(200 210 215 / 0.08), transparent 60%);
+  --hover-shadow: 0 0 16px rgb(201 255 61 / 0.25);
+  /* жест наведения — металл плавится прямо в заголовке: см. .t-heavy-metal-3 .row__title */
+  --hover-anim: none;
+  --sweep: none;
+  --mk-hi: #e6ebee; --mk-mid: #3a3e42; --mk-lo: #c9ff3d;
+}
+
 /* Shh? — третья сторона тишины, вопрос: плёнка нефти на ночной воде. Название переливается
    красным, фиолетовым и зелёным, и каждая буква ловит свой цвет. */
 .t-shh-question {
@@ -283,6 +322,7 @@ html {
   scrollbar-color: #2e2e35 var(--void);
   background: var(--void);
 }
+html[data-world='heavy-metal-3'] { --amb: rgb(170 180 186 / 0.1); --amb-line: #262a2d; }
 html[data-world='shh-question'] { --amb: rgb(150 60 230 / 0.18); --amb-line: #35124d; }
 html[data-world='shh'] { --amb: rgb(60 100 240 / 0.2); --amb-line: #1b2750; }
 html[data-world='shh-loud'] { --amb: rgb(220 30 50 / 0.2); --amb-line: #4a0d15; }
@@ -315,6 +355,7 @@ body::after {
 }
 
 ::selection { background: var(--wound); color: #fff; }
+.t-heavy-metal-3::selection, .t-heavy-metal-3 ::selection { background: #3d4a12; }
 .t-shh-question::selection, .t-shh-question ::selection { background: #6a2aa8; }
 .t-shh::selection, .t-shh ::selection { background: #2a4499; }
 .t-shh-loud::selection, .t-shh-loud ::selection { background: #b01526; }
@@ -506,6 +547,64 @@ button { font: inherit; color: inherit; cursor: pointer; }
   color: rgb(200 245 255 / 0.75);
 } }
 
+/* HEAVY METAL 3 — чёрная ртуть. Видимые буквы (::before) почти чёрные, и по ним без конца
+   медленно ходит ртутный отсвет: название никогда не видно целиком, только тот кусок, где сейчас свет.
+   Под ними (::after) металл стекает вниз — копия букв вытянута и тает к низу, а в потёках
+   тлеет кислотный цвет. При наведении металл течёт сильнее, а свет бежит быстрее. */
+.album-name--heavy-metal-3 {
+  position: relative;
+  z-index: 0;
+  background: none;
+  animation: none;
+}
+.album-name--heavy-metal-3::before,
+.album-name--heavy-metal-3::after {
+  content: attr(data-text) / '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.album-name--heavy-metal-3::before {
+  background-image: var(--mercury), var(--name-fill);
+  background-size: 300% 100%, 100% 100%;
+  background-position: 150% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* тонкий контур, чтобы в тёмных местах буквы не пропадали совсем */
+  -webkit-text-stroke: max(0.5px, 0.006em) rgb(150 158 164 / 0.35);
+  animation: mercury 9s 0.3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+.album-name--heavy-metal-3::after {
+  z-index: -1;
+  color: transparent;
+  background-image: linear-gradient(180deg, transparent 45%, rgb(120 128 134 / 0.5) 62%, rgb(201 255 61 / 0.45) 80%, transparent 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: blur(0.02em);
+  transform-origin: 50% 40%;
+  transform: scaleY(1.14);
+  -webkit-mask-image: linear-gradient(180deg, transparent 50%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 50%, #000 70%, transparent 100%);
+  transition: transform 1.4s var(--ease), filter 1.4s var(--ease), opacity 1.4s var(--ease);
+  opacity: 0.8;
+}
+@keyframes mercury {
+  0% { background-position: 150% 0, 0 0; }
+  100% { background-position: -50% 0, 0 0; }
+}
+@media (hover: hover) { .world:hover .album-name--heavy-metal-3::after,
+.group__head:hover .album-name--heavy-metal-3::after,
+.theory__hero:hover .album-name--heavy-metal-3::after {
+  transform: scaleY(1.45);
+  filter: blur(0.035em) drop-shadow(0 0.1em 0.3em rgb(201 255 61 / 0.35));
+  opacity: 1;
+}
+.world:hover .album-name--heavy-metal-3::before,
+.group__head:hover .album-name--heavy-metal-3::before,
+.theory__hero:hover .album-name--heavy-metal-3::before { animation-duration: 3.5s; } }
+
 /* Shh? — перелив: видимые буквы (::before) залиты плёнкой, которая бесконечно течёт вдоль слова,
    поэтому каждая буква по очереди проходит красный, фиолетовый и зелёный. Под ними (::after) —
    размытый ореол из той же плёнки, текущий навстречу: края букв светятся не тем цветом, что их
@@ -684,6 +783,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tab.t-shh .tab__album { letter-spacing: 0.04em; font-weight: 400; }
 .tab.t-shh-loud .tab__album { font-size-adjust: cap-height 0.86; letter-spacing: 0.02em; }
 .tab.t-shh:not([aria-pressed='true']) { color: var(--bone); }
+.tab.t-heavy-metal-3 .tab__album { font-size-adjust: cap-height 0.74; }
 .tab.t-shh-question .tab__album { font-size-adjust: cap-height 0.72; font-style: italic; }
 .tab.t-god-system .tab__album { font-size-adjust: cap-height 0.8; letter-spacing: -0.02em; }
 .tab.t-angel-may-cry-2 .tab__album { font-size-adjust: cap-height 0.78; letter-spacing: -0.015em; }
@@ -706,6 +806,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .group__head::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: var(--rule-h); background: var(--rule); }
 .group__title { font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1; margin: 0; }
+.group__title.album-name--heavy-metal-3 { font-size: clamp(2.3rem, 6.6vw, 4.6rem); }
 .group__title.album-name--angel-may-cry-2 { font-size: clamp(1.9rem, 5.2vw, 3.5rem); }
 .group__title.album-name--damage { -webkit-box-reflect: below -0.12em linear-gradient(transparent 60%, rgb(0 0 0 / 0.28)); margin-bottom: 0.3em; }
 .group__title--plain { font: italic 500 clamp(2.5rem, 5.5vw, 3.75rem)/1 var(--f-serif); color: var(--bone); }
@@ -793,6 +894,28 @@ button { font: inherit; color: inherit; cursor: pointer; }
   0% { text-shadow: -6px 0 rgb(168 124 255 / 0.9), 6px 0 rgb(110 220 255 / 0.6); }
   35% { text-shadow: 3px 0 rgb(168 124 255 / 0.85), -3px 0 rgb(110 220 255 / 0.5); }
   100% { text-shadow: var(--hover-shadow); }
+}
+
+/* HEAVY METAL 3 — заголовок плавится: на миг оплывает вниз и мутнеет, как раскалённый металл,
+   затем застывает ртутью, и по нему идёт тот же отсвет, что по названию альбома. */
+.t-heavy-metal-3 .row__title {
+  display: inline-block;
+  transform-origin: 50% 0;
+  background-image: var(--mercury), linear-gradient(180deg, #f2f5f7 0%, #b7bec3 45%, #5c6166 55%, #d4d9dc 100%);
+  background-size: 300% 100%, 100% 100%;
+  background-position: 150% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+@media (hover: hover) { .t-heavy-metal-3 .row__btn:hover .row__title {
+  color: rgb(230 227 220 / 0);
+  animation: melt 0.7s var(--ease), mercury 2.4s 0.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+} }
+@keyframes melt {
+  0% { transform: scaleY(1); filter: blur(0); }
+  35% { transform: scaleY(1.12) skewX(-2deg); filter: blur(1.5px) drop-shadow(0 4px 6px rgb(201 255 61 / 0.4)); }
+  100% { transform: none; filter: blur(0); }
 }
 
 /* Shh? — заголовок наливается той же плёнкой, что и название альбома, и она течёт по буквам,
@@ -1103,6 +1226,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .album-name--shh::before, .album-name--shh-loud::before, .album-name--god-system::before { background-position: -60% 0, 0 0; }
   /* развёртка не бежит: строки просто стоят за буквами */
   .album-name--god-system::after { animation: none; }
+  /* ртуть стоит: отсвет замер на месте, металл не плавится */
+  .album-name--heavy-metal-3::before, .t-heavy-metal-3 .row__btn:hover .row__title { animation: none; background-position: 50% 0, 0 0; }
+  .album-name--heavy-metal-3::after { transition: opacity 0.3s; }
+  .world:hover .album-name--heavy-metal-3::after, .group__head:hover .album-name--heavy-metal-3::after, .theory__hero:hover .album-name--heavy-metal-3::after { transform: scaleY(1.14); }
   /* перелив стоит: цвета остаются на буквах, но не текут */
   .album-name--shh-question::before, .album-name--shh-question::after, .t-shh-question .row__btn:hover .row__title { animation: none; }
   .album-name--shh::after { transition: opacity 0.3s; }

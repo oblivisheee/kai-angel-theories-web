@@ -31,6 +31,7 @@ collections:
         direction: descending
     view_filters:
       filters:
+        - { name: heavy-metal-3, label: "HEAVY METAL 3", field: album, pattern: "^heavy-metal-3$" }
         - { name: shh-question, label: "Shh?", field: album, pattern: "^shh-question$" }
         - { name: shh-loud, label: "Shh!", field: album, pattern: "^shh-loud$" }
         - { name: shh, label: "Shh...", field: album, pattern: "^shh$" }
@@ -53,6 +54,7 @@ collections:
         required: false
         hint: Оставьте пустым, если теория не привязана к альбому — она попадёт в «Вне альбомов».
         options:
+          - { label: "HEAVY METAL 3", value: heavy-metal-3 }
           - { label: "Shh?", value: shh-question }
           - { label: "Shh!", value: shh-loud }
           - { label: "Shh...", value: shh }
@@ -85,13 +87,17 @@ collections:
     label: Альбомы
     icon: album
     files:
-      - name: shh-question
-        label: "Shh?"
-        file: /content/albums/shh-question.json
+      - name: heavy-metal-3
+        label: HEAVY METAL 3
+        file: /content/albums/heavy-metal-3.json
         fields: &album_fields
           - { label: Название, name: title, widget: string }
           - { label: Год, name: year, widget: number, value_type: int, required: false, hint: "Пусто — год не показывается" }
           - { label: Описание, name: note, widget: text }
+      - name: shh-question
+        label: "Shh?"
+        file: /content/albums/shh-question.json
+        fields: *album_fields
       - name: shh-loud
         label: "Shh!"
         file: /content/albums/shh-loud.json
